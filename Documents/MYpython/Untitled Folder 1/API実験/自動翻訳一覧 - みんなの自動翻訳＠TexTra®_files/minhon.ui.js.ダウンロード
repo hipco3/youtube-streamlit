@@ -1,0 +1,233 @@
+minhon.ui = {
+	//--------------------------------------------------
+	// Name        : alert
+	// Arguments   :
+	// Description :
+	//--------------------------------------------------
+	alert : function( cls, title, message ){
+		var $alert = $("<div>").addClass("alert").addClass(cls);
+
+		if ( title != null && title.length > 0 ){
+			$alert.append($("<strong>")
+				.text(title)
+			);
+		}
+
+		if ( message != null && message.length > 0 ){
+			$alert.append($("<span>")
+				.text(message)
+			);
+		}
+
+		return $alert;
+	},
+
+	//--------------------------------------------------
+	// Name        : loading
+	// Arguments   :
+	// Description :
+	//--------------------------------------------------
+	loading : function( isStart, message ){
+		if ( isStart ){
+			$.blockUI();
+			$(".blockUI .progress-bar").text(message);
+		} else {
+			$.unblockUI();
+		}
+	},
+
+	//--------------------------------------------------
+	// Name        : loadingElm
+	// Arguments   :
+	// Description :
+	//--------------------------------------------------
+	loadingElm : function(){
+		var str  = '<div class="progress progress-striped active" style="width: 100%">';
+		    str += '	<div class="progress-bar progress-bar-warning" style="width: 100%">';
+		    str += '	</div>';
+		    str += '</div>';
+
+		return str;
+	},
+
+	//--------------------------------------------------
+	// Name        : notify
+	// Arguments   :
+	// Description :
+	//--------------------------------------------------
+	notify : function( title, message ){
+		$("div.notify").remove();
+
+		var $modal   = $("<div>").addClass("modal modal-notify fade");
+		var $content = $("<div>").addClass("modal-content");
+		var $header  = $("<div>").addClass("modal-header");
+		var $body    = $("<div>").addClass("modal-body");
+		var $footer  = $("<div>").addClass("modal-footer")
+
+		// header
+		if ( title ){
+			$header.append(title).appendTo($content);
+		}
+
+		// body
+		if ( message ){
+			$body.append(message).appendTo($content);
+		}
+
+		var $dialog = $("<div>")
+			.addClass("modal-dialog")
+			.append($content)
+		;
+
+		$modal.append($dialog).modal();
+	},
+
+	//--------------------------------------------------
+	// Name        : tooltip
+	// Arguments   :
+	// Description :
+	//--------------------------------------------------
+	tooltip : function( $target ){
+		$target = $target || $(".minhon-tooltip");
+
+		$target.on("mousemove", function( event ){
+			var text = $(this).attr("title") || $(this).attr("data-title");
+			$(this).attr("title", null);
+			$(this).attr("data-title", text);
+
+			// ツールチップ要素
+			var $tooltip = $("#minhon-tooltip");
+
+			if ( $tooltip.length == 0 ){
+				$tooltip = $("<div>")
+					.attr("id", "minhon-tooltip")
+					.css({
+						"padding"          : "4px",
+						"position"         : "absolute",
+						"max-width"        : "50%",
+						"color"            : "#444",
+						"border"           : "1px solid #999",
+						"background-color" : "#fff",
+						"z-index"          : "30000"
+					})
+					.appendTo("body")
+				;
+			}
+
+			$tooltip.empty();
+
+			$tooltip.append($("<span>").text(text));
+
+			$tooltip.show().position({
+				my : "left+10 bottom-10",
+				of : event,
+				at : "left bottom",
+				collision : "fit"
+			});
+		}).on("mouseout", function(){
+			$("#minhon-tooltip").hide();
+		});
+	},
+
+	//--------------------------------------------------
+	// Name        : hint
+	// Arguments   :
+	// Description :
+	//--------------------------------------------------
+	hintTime : null,
+	hint : function(){
+		$(".minhon-hint")
+			.off("mouseover")
+			.on("mouseover", function(){
+				var that = this;
+
+				$(this).css("cursor", "help");
+
+				minhon.ui.hintTime = setTimeout(function(){
+					$(that).css("cursor", "auto");
+
+					var placement = $(that).attr("data-hint-placement") || "top";
+
+					var hint = $(that).attr("data-hint");
+
+					var isHtml = hint.split("\n").length > 1;
+
+					$(that).popover({
+						"placement": placement,
+						"title"    : "",
+						"html"     : isHtml,
+						"content"  : hint.split("\n").join("<br>"),
+						"container": "body"
+					}).popover("show");
+				}, 1000);
+			})
+			.off("mouseout")
+			.on("mouseout", function(){
+				$(this).css("cursor", "auto");
+
+				clearInterval(minhon.ui.hintTime);
+
+				$(".popover").remove();
+			})
+		;
+		$(".minhon-hint").each(function(){
+			if ( $(this).attr("data-icon") ){
+				if ( $(this).find(".glyphicon-question-sign").length == 0 ){
+					$(this).append($("<span>").addClass("glyphicon glyphicon-question-sign"));
+				}
+			}
+		})
+	},
+
+	toast : function(){
+		if ( $(".minhon-toast").length > 0 ){
+			$(".minhon-toast").hide().fadeIn(500, function(){
+				setTimeout(function(){
+					$(".minhon-toast").fadeOut(500);
+				}, 5000);
+			});
+		}
+	},
+
+	sim : function( score ){
+		score = parseFloat(score);
+
+		var clsScore = "sim-score";
+		if ( score < 0.2 ){
+			clsScore += "-00";
+		} else if ( score < 0.4 ){
+			clsScore += "-02";
+		} else if ( score < 0.6 ){
+			clsScore += "-04";
+		} else if ( score < 0.8 ){
+			clsScore += "-06";
+		} else if ( score < 1.0 ){
+			clsScore += "-08";
+		} else {
+			clsScore += "-10";
+		}
+
+		// パーセント変換
+		score = score * 100;
+		//
+		score = Math.floor(score * 10) / 10;
+		//
+		score = score.toFixed(1);
+
+		//return $("<span>").addClass("sim-score " + clsScore + "").text(score + "%");
+
+		return $("<div>").addClass("progress progress-sim").append(
+			$("<div>").addClass("progress-bar").css("width", score + "%").append(
+				$("<span>").addClass("sim-score").text(score + "%")
+			)
+		);
+	},
+
+	eod : null
+};
+
+$(function(){
+	minhon.ui.tooltip();
+	minhon.ui.hint();
+	minhon.ui.toast();
+})

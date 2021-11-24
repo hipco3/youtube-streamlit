@@ -1,0 +1,254 @@
+minhon.define = {
+	RES_OK      :  1,  // OK *php
+	RES_NG      : -1,  // NG *php
+	RES_NO_DATA : -2,  // データが無い *php
+
+	OFF     :  0,  // OFF *php
+	ON      :  1,  // OK *php
+
+	INIT_ID : 0, // 初期ID *php
+
+	ASC  : "ASC",
+	DESC : "DESC",
+
+	STR_AJAX_ERROR : "Communication error",
+
+	//----------------------------
+	// class
+	//----------------------------
+	SCRIPT : {
+		PUNCTUATION : "-"  // *php
+	},
+
+	//----------------------------
+	// database
+	//----------------------------
+	DB_T_ADAPT_STATE_F        : -2,  // 状態(失敗)  *php
+	DB_T_ADAPT_STATE_D        : -1,  // 状態(削除)  *php
+	DB_T_ADAPT_STATE_W        :  0,  // 状態(待機中)  *php
+	DB_T_ADAPT_STATE_P        :  1,  // 状態(処理中)  *php
+	DB_T_ADAPT_STATE_S        :  2,  // 状態(停止中)  *php
+	DB_T_ADAPT_STATE_C        :  3,  // 状態(完了)  *php
+	DB_T_ADAPT_STATE_UP_W     : 10,  // 状態(更新 - 待機中)  *php
+	DB_T_ADAPT_STATE_UP_P     : 11,  // 状態(更新 - 処理中)  *php
+	DB_T_ADAPT_STATE_DL_W     : 20,  // 状態(DL - 待機中)  *php
+	DB_T_ADAPT_STATE_DL_P     : 21,  // 状態(DL - 処理中)  *php
+	DB_T_ADAPT_STATE_DL_C     : 22,  // 状態(DL - 可能)  *php
+	DB_T_ADAPT_USEBILINGUAL_SELECT : 0,  // 対訳集使用(個別選択)  *php
+	DB_T_ADAPT_USEBILINGUAL_MINE   : 1,  // 対訳集使用(自グループ全データ)  *php
+	DB_T_ADAPT_USEBILINGUAL_ORG    : 2,  // 対訳集使用(グループ指定)  *php
+	DB_T_ADAPT_USEBILINGUAL_ALL    : 3,  // 対訳集使用(全データ)  *php
+	DB_T_ADAPT_USEDOC_OFF          : 0,  // 文書データ使用(使用しない)  *php
+	DB_T_ADAPT_USEDOC_MINE         : 1,  // 文書データ使用(自グループ全データ)  *php
+	DB_T_ADAPT_USEDOC_ORG          : 2,  // 文書データ使用(グループ指定)  *php
+	DB_T_ADAPT_USEDOC_ALL          : 3,  // 文書データ使用(全データ)  *php
+	DB_T_ADAPT_USELOG_OFF          : 0,  // リクエストデータ使用(使用しない)  *php
+	DB_T_ADAPT_USELOG_MINE         : 1,  // リクエストデータ使用(自グループ全データ)  *php
+	DB_T_ADAPT_USELOG_ORG          : 2,  // リクエストデータ使用(グループ指定)  *php
+	DB_T_ADAPT_USELOG_ALL          : 3,  // リクエストデータ使用(全データ)  *php
+	DB_T_CUSTOM_EVALUATION_OFF : 0,  // 評価対象か？(OFF)          // *php
+	DB_T_CUSTOM_EVALUATION_ON2 : 1,  // 評価対象か？(ON 2段階評価)  // *php
+	DB_T_CUSTOM_EVALUATION_ON5 : 2,  // 評価対象か？(ON 5段階評価)  // *php
+	DB_T_DOC_TYPE_FILE         : "file",       // タイプ(ファイル)  // *php
+	DB_T_DOC_TYPE_URL          : "url",        // タイプ(URL)  // *php
+	DB_T_DOC_TYPE_TEXT         : "text",       // タイプ(テキスト入力)  // *php
+	DB_T_DOC_TYPE_ALIGNMENT    : "alignment",  // タイプ(対訳アライメント)  // *php
+	DB_T_DOC_RENEW_NONE        : 0,  // 文書更新(無し)  // *php
+	DB_T_DOC_RENEW_WAITING     : 1,  // 文書更新(待機中)  // *php
+	DB_T_DOC_RENEW_CHECKING    : 2,  // 文書更新(確認中)  // *php
+	DB_T_DOC_RENEW_UPDATED_DC  : 10,  // 文書更新(更新有り:文書コンバータ)  // *php
+	DB_T_DOC_RENEW_UPDATED_DOC : 11,  // 文書更新(更新有り:元文書)  // *php
+	DB_T_DOC_RENEW_NOT_NOTITY  : 20,  // 文書更新(確認済み&通知無し)  // *php
+	DB_T_DOC_RENEW_EXECUTION   : 30,  // 文書更新(元文書更新実行)  // *php
+	DB_T_DOC_RENEW_FAILED      : -1,  // 文書更新(確認失敗)  // *php
+	DB_T_DOC_COMMIT_NONE       :  0,  // 文書コミット状態(未作業)  // *php
+	DB_T_DOC_COMMIT_WORK       : 10,  // 文書コミット状態(作業中)  // *php
+	DB_T_DOC_COMMIT_DONE       : 20,  // 文書コミット状態(作業済み)  // *php
+	DB_T_DOC_PUBLIC_OFF        : 0,  // 公開状態(非公開)  // *php
+	DB_T_DOC_PUBLIC_ON         : 1,  // 公開状態(公開)   // *php
+	DB_T_EDITOR_WYSIWYG_OFF   : 0,  // 初期表示モード(WYSIWYGモード)  *php
+	DB_T_EDITOR_WYSIWYG_ON    : 1,  // 初期表示モード(WYSIWYGモード)  *php
+	DB_T_EDITOR_DISPLAY_WYSIWYG   : 0,  // 初期表示モード(WYSIWYGモード)  *php
+	DB_T_EDITOR_DISPLAY_SRCTGT    : 1,  // 初期表示モード(原文-訳文モード)  *php
+	DB_T_EDITOR_DISPLAY_SRCADJ    : 2,  // 初期表示モード(原文調整モード)  *php
+	DB_T_EDITOR_DISPLAY_LASTTIME  : 9,  // 初期表示モード(前回表示モード)  *php
+	DB_T_EDITOR_MAP_ALL           : 0,  // 初期目次(全て表示)  *php
+	DB_T_EDITOR_MAP_HIDDEN        : 1,  // 初期目次(表示なし)  *php
+	DB_T_EDITOR_MAP_NONE          : 2,  // 初期目次(なし)  *php
+	DB_T_EDITOR_MAP_SRC           : 3,  // 初期目次(SRC)  *php
+	DB_T_EDITOR_MAP_TM            : 4,  // 初期目次(TM挿入)  *php
+	DB_T_EDITOR_MAP_MT_OOV        : 5,  // 初期目次(MT挿入(未知語有り))  *php
+	DB_T_EDITOR_MAP_MT            : 6,  // 初期目次(MT挿入)  *php
+	DB_T_EDITOR_MAP_EDIT          : 7,  // 初期目次(EDIT)  *php
+	DB_T_EDITOR_MAP_CHECK         : 8,  // 初期目次(更新)  *php
+	DB_T_EDITOR_MAP_LOCK          : 9,  // 初期目次(コミット)  *php
+	DB_T_EDITOR_MAP_GROUP         : 10, // 初期目次(グループ)  *php
+	DB_T_EDITOR_MAP_COMMENT       : 11, // 初期目次(コメント)  *php
+	DB_T_EDITOR_TOOLTIP_OFF       : 0,  // ツールチップ表示(OFF)  *php
+	DB_T_EDITOR_TOOLTIP_ON        : 1,  // ツールチップ表示(ON)  *php
+	DB_T_EDITOR_TOOLTIP_ON_BOTTOM : 2,  // ツールチップ表示(ON bottom)  *php
+	DB_T_EDITOR_AUTOCOMPLETE_OFF  : 0,  // オートコンプリート表示(OFF)  *php
+	DB_T_EDITOR_AUTOCOMPLETE_ON   : 1,  // オートコンプリート表示(ON)  *php
+	DB_T_EDITOR_NOTTRANS_OFF      : 0,  // 未翻訳文章表示(OFF)  *php
+	DB_T_EDITOR_NOTTRANS_ON       : 1,  // 未翻訳文章表示(ON)  *php
+	DB_T_EDITOR_EDITFORM_OFF      : 0,  // 編集フォーム外クリック(OFF)  *php
+	DB_T_EDITOR_EDITFORM_ON       : 1,  // 編集フォーム外クリック(ON)  *php
+	DB_T_EDITOR_LAYOUT_ST         : 0,  // 初期レイアウト(原文+訳文 左右)  *php
+	DB_T_EDITOR_LAYOUT_ST_V       : 1,  // 初期レイアウト(原文+訳文 上下)  *php
+	DB_T_EDITOR_LAYOUT_S          : 2,  // 初期レイアウト(原文)  *php
+	DB_T_EDITOR_LAYOUT_T          : 3,  // 初期レイアウト(訳文)  *php
+	DB_T_EDITOR_STATEPOSITION_L   : 0,  // 文章状態表示位置(左)  *php
+	DB_T_EDITOR_STATEPOSITION_R   : 1,  // 文章状態表示位置(右)  *php
+	DB_T_EDITOR_SKEY_NONE         : 0,  // ショートカットキー(設定無し)  *php
+	DB_T_EDITOR_SKEY_CTRL_S       : 0x01,  // ショートカットキー(Ctrl+s)  *php
+	DB_T_EDITOR_SKEY_ESC          : 0x02,  // ショートカットキー(Esc)  *php
+	DB_T_FOLDER_TYPE_NORMAL : 0,  // フォルダータイプ(通常)  *php
+	DB_T_FOLDER_TYPE_WORKSP : 1,  // フォルダータイプ(作業用)  *php
+	DB_T_TERM_ROOT_PUBLIC_OFF : 0,  // 公開設定(OFF)  *php
+	DB_T_TERM_ROOT_PUBLIC_ON  : 1,  // 公開設定(ON)  *php
+	DB_T_TERM_ROOT_ADAPT_OFF : 0,  // アダプテーション用途公開設定(OFF)  *php
+	DB_T_TERM_ROOT_ADAPT_ON  : 1,  // アダプテーション用途公開設定(ON)  *php
+	DB_T_USER_REQUEST_LOGGING_OFF       : 0,  // 履歴記録OFF  *php
+	DB_T_USER_REQUEST_LOGGING_ON        : 1,  // 履歴記録ON   *php
+	DB_T_USER_REQUEST_LOGGING_ON_WEEK   : 2,  // 履歴記録ON(1週間)   *php
+	DB_T_USER_REQUEST_LOGGING_ON_MONTH  : 3,  // 履歴記録ON(1ヶ月)   *php
+	DB_T_USER_REQUEST_LOGGING_ON_TERM   : 4,  // 履歴記録ON(〇ヶ月)   *php
+
+	//----------------------------
+	// TermRoot
+	//----------------------------
+	TERM_ROOT_KIND_TERM      : "term",       // *php
+	TERM_ROOT_KIND_BILINGUAL : "bilingual",  // *php
+	TERM_ROOT_KIND_REGEX     : "regex",  // *php
+
+	//----------------------------
+	// Doc
+	//----------------------------
+	DOC_DOWNLOAD_TYPE_SOURCE : "source",  // ダウンロードタイプ(原文)  *php
+	DOC_DOWNLOAD_TYPE_TARGET : "target",  // ダウンロードタイプ(訳文)  *php
+	DOC_DOWNLOAD_TYPE_BOTH   : "both",    // ダウンロードタイプ(原文＆訳文)  *php
+	DOC_DOWNLOAD_TYPE_TSV    : "tsv",     // ダウンロードタイプ(TSV)  *php
+	DOC_DOWNLOAD_TYPE_REVERSE: "reverse", // ダウンロードタイプ(逆翻訳)  *php
+	DOC_DOWNLOAD_TYPE_TM     : "tm",      // ダウンロードタイプ(類似度)  *php
+	DOC_DOWNLOAD_TYPE_TMX    : "tmx",     // ダウンロードタイプ(TMX)  *php
+	DOC_DOWNLOAD_TYPE_XLF    : "xlf",     // ダウンロードタイプ(XLF)  *php
+	DOC_DOWNLOAD_TYPE_PO     : "po",      // ダウンロードタイプ(PO)  *php
+
+	//----------------------------
+	// Cache
+	//----------------------------
+	CACHE_DOC_TYPE                  : "doc_type",           // 文書入力タイプ  *php
+	CACHE_EDITOR_DISPLAY            : "editor_display",     // エディタ前回表示  *php
+	CACHE_TRANS_FILE_LANG_S         : "trans_file_lang_s",  // ファイル翻訳原言語  *php
+	CACHE_TRANS_FILE_LANG_T         : "trans_file_lang_t",  // ファイル翻訳訳言語  *php
+	CACHE_WORK_LAYOUT               : "work_layout",        // ワークスペース レイアウト  *php
+	CACHE_DEMO_MT_LANG_S            : "demo_mt_lang_s",     // 自動翻訳デモ 選択MT  *php
+	CACHE_DEMO_MT_LANG_T            : "demo_mt_lang_t",     // 自動翻訳デモ 選択MT  *php
+	CACHE_DEMO_MT_MT                : "demo_mt_mt",         // 自動翻訳デモ 選択MT  *php
+	CACHE_DEMO_MT_JOIN              : "demo_mt_join",         // 自動翻訳デモ 文章結合  *php
+	CACHE_DEMO_MT_SPLIT             : "demo_mt_split",         // 自動翻訳デモ 文章分割  *php
+	CACHE_DEMO_MT_NOLOOKUP          : "demo_mt_nolookup",    // 自動翻訳デモ 辞書引き不要  *php
+	CACHE_DEMO_MT_HISTORY           : "demo_mt_history",    // 自動翻訳デモ 文脈利用翻訳  *php
+	CACHE_DEMO_MT_REVERSE_DISPLAY   : "demo_mt_reverse_display",    // 自動翻訳デモ 逆翻訳表示  *php
+	CACHE_DEMO_MT_REVERSE_HIGHLIGHT : "demo_mt_reverse_highlight",    // 自動翻訳デモ 逆翻訳ハイライト  *php
+	CACHE_DEMO_MT_DESIGNATION       : "demo_mt_designation",    // 自動翻訳デモ 訳語指定翻訳  *php
+	CACHE_DEMO_DISPLAY_FONTSIZE     : "demo_display_fontsize",  // 自動翻訳デモ フォントサイズ  *php
+	CACHE_DEMO_DISPLAY_LAYOUT       : "demo_display_layout",  // 自動翻訳デモ レイアウト  *php
+	CACHE_RIBBON_MENU               : "ribbon_menu",        // メニューリボン  *php
+
+	//----------------------------
+	// app
+	//----------------------------
+	// alignmentController.php
+	APP_ALIGNMENT_CONTROLLER_MODE_DL   : 1, // モード(ダウンロード)  *php
+	// apiInfoController.php
+	APP_API_INFO_CONTROLLER_MODE_MT             : "api_mt",             // モード(MT)  *php
+	APP_API_INFO_CONTROLLER_MODE_MT_ADAPT       : "api_mt_adapt",       // モード(MT_ADAPT)  *php
+	APP_API_INFO_CONTROLLER_MODE_SIM            : "api_sim",            // モード(SIM)  *php
+	APP_API_INFO_CONTROLLER_MODE_TERM_ROOT      : "api_term_root",      // モード(TERM_ROOT)  *php
+	APP_API_INFO_CONTROLLER_MODE_TERM           : "api_term",           // モード(TERM)  *php
+	APP_API_INFO_CONTROLLER_MODE_BILINGUAL_ROOT : "api_bilingual_root", // モード(BILINGUAL_ROOT)  *php
+	APP_API_INFO_CONTROLLER_MODE_BILINGUAL      : "api_bilingual",      // モード(BILINGUAL)  *php
+	APP_API_INFO_CONTROLLER_MODE_LOOKUP         : "api_lookup",         // モード(LOOKUP)  *php
+	APP_API_INFO_CONTROLLER_MODE_SPLIT          : "api_split",          // モード(SPLIT)  *php
+	APP_API_INFO_CONTROLLER_MODE_CONVERT        : "api_convert",        // モード(CONVERT)  *php
+	APP_API_INFO_CONTROLLER_MODE_LANGDETECT     : "api_langdetect",     // モード(LANGDETECT)  *php
+	APP_API_INFO_CONTROLLER_MODE_TRANS_FILE     : "api_trans_file",     // モード(TRANS_FILE)  *php
+	APP_API_INFO_CONTROLLER_MODE_EXTERM         : "api_exterm",         // モード(EXTERM)  *php
+	APP_API_INFO_CONTROLLER_MODE_ALIGNMENT      : "api_alignment",      // モード(ALIGNMENT)  *php
+	APP_API_INFO_CONTROLLER_MODE_DOC            : "api_doc",            // モード(DOC)  *php
+	APP_API_INFO_CONTROLLER_MODE_SIM_CALC       : "api_sim_calc",       // モード(SIM_CALC)  *php
+	// evalController.php
+	APP_EVAL_CONTROLLER_MODE_DL_RESULT : 1, // モード(ダウンロード)  *php
+	APP_EVAL_CONTROLLER_MODE_DL_TRANS  : 2, // モード(ダウンロード)  *php
+	APP_EVAL_CONTROLLER_MODE_RESULT    : 3, // モード(結果)  *php
+	APP_EVAL_CONTROLLER_MODE_INFO      : 4, // モード(インフォ)  *php
+	APP_EVAL_CONTROLLER_MODE_PROGRESS  : 5, // モード(進捗)  *php
+	// extermController.php
+	APP_EXTERM_CONTROLLER_MODE_DL       : 1, // モード(ダウンロード)  *php
+	APP_EXTERM_CONTROLLER_MODE_INFO     : 2, // モード(インフォ)  *php
+	APP_EXTERM_CONTROLLER_MODE_PROGRESS: 3, // モード(進捗)  *php
+	// mtController.php
+	APP_MT_CONTROLLER_MODE_PROGRESS   : 1, // モード(進捗)  *php
+	APP_MT_CONTROLLER_MODE_MTFORM     : 2, // モード(mtform)  *php
+	APP_MT_CONTROLLER_MODE_DOWNLOAD   : 3, // モード(ダウンロードリクエスト)  *php
+	// qaController.php
+	APP_QA_CONTROLLER_GET : 0,  // モード(取得)  *php
+	APP_QA_CONTROLLER_REGISTER : 1,  // モード(登録)  *php
+	// requestLogController.php
+	APP_REQUEST_LOG_CONTROLLER_MODE_DELETE_ALL : 0,  // モード(全削除)  *php
+	APP_REQUEST_LOG_CONTROLLER_MODE_DELETE : 1,  // モード(削除)  *php
+	APP_REQUEST_LOG_CONTROLLER_MODE_DOC_ADD : 2,  // モード(文書 - 文章追加)  *php
+	APP_REQUEST_LOG_CONTROLLER_MODE_DOC_CONFIRM : 3,  // モード(文書 - 文章確認)  *php
+	APP_REQUEST_LOG_CONTROLLER_MODE_DOC_RESET : 4,  // モード(文書 - 文章リセット)  *php
+	APP_REQUEST_LOG_CONTROLLER_MODE_DOC_REGISTER: 5,  // モード(文書 - 文書登録)  *php
+	APP_REQUEST_LOG_CONTROLLER_MODE_CONDITIONS_DELETE : 6,  // モード(条件付き削除 - ブックマーク済み履歴)  *php
+	// tankController.php
+	APP_TANK_CONTROLLER_MODE_REGISTER : 0,  // モード(登録)  *php
+	APP_TANK_CONTROLLER_MODE_DELETE   : 1,  // モード(削除)  *php
+	APP_TANK_CONTROLLER_MODE_MARK     : 2,  // モード(マーク)  *php
+	// termController.php
+	APP_TERM_CONTROLLER_MODE_SEARCH        :  0,  // モード(検索)  *php
+	APP_TERM_CONTROLLER_MODE_FORM          :  1,  // モード(フォーム)  *php
+	APP_TERM_CONTROLLER_MODE_SET           :  2,  // モード(セット)  *php
+	APP_TERM_CONTROLLER_MODE_SET_FILE      :  3,  // モード(セット)  *php
+	APP_TERM_CONTROLLER_MODE_DL            :  4,  // モード(ダウンロード)  *php
+	APP_TERM_CONTROLLER_MODE_FORM_MULTIPLE :  5,   // モード(フォーム)  *php
+	APP_TERM_CONTROLLER_MODE_SET_MULTIPLE  :  6,   // モード(セット)  *php
+	APP_TERM_CONTROLLER_MODE_DEL           : -1,  // モード(削除)  *php
+	APP_TERM_CONTROLLER_MODE_DEL_ALL       : -2,  // モード(一括削除)  *php
+	// termRootController.php
+	APP_TERM_ROOT_CONTROLLER_MODE_SEARCH   :  0,  // モード(検索)  *php
+	APP_TERM_ROOT_CONTROLLER_MODE_SET      :  1,  // モード(セット)  *php
+	APP_TERM_ROOT_CONTROLLER_MODE_PROGRESS :  2,  // モード(進捗)  *php
+	APP_TERM_ROOT_CONTROLLER_MODE_DEL      : -1,  // モード(削除)  *php
+	// transFileController.php
+	APP_TRANS_FILE_CONTROLLER_MODE_DL       : 1, // モード(ダウンロード)  *php
+	APP_TRANS_FILE_CONTROLLER_MODE_SIMINFO  : 2, // モード(類似文検索インフォ)  *php
+	APP_TRANS_FILE_CONTROLLER_MODE_LOG      : 3, // モード(ログ)  *php
+	APP_TRANS_FILE_CONTROLLER_MODE_PROGRESS : 4, // モード(進捗)  *php
+	// workController.php
+	APP_WORK_CONTROLLER_MODE_FOLDER_REG           : 1,  // モード(フォルダ登録)  *php
+	APP_WORK_CONTROLLER_MODE_FOLDER_GET           : 2,  // モード(フォルダ一覧取得)  *php
+	APP_WORK_CONTROLLER_MODE_DOC_REG              : 3,  // モード(文書登録)  *php
+	APP_WORK_CONTROLLER_MODE_DOC_GET              : 4,  // モード(文書一覧取得)  *php
+	APP_WORK_CONTROLLER_MODE_DOC_LOAD             : 5,  // モード(文書ロード)  *php
+	APP_WORK_CONTROLLER_MODE_DOC_MOVE             : 6,  // モード(文書移動)  *php
+	APP_WORK_CONTROLLER_MODE_DOC_DOWNLOAD_STATE   : 7,  // モード(文書ダウンロード状態)  *php
+	APP_WORK_CONTROLLER_MODE_DOC_DOWNLOAD         : 8,  // モード(文書ダウンロード)  *php
+	APP_WORK_CONTROLLER_MODE_DOC_RENEW            : 9,  // モード(文書更新)  *php
+	APP_WORK_CONTROLLER_MODE_DOC_EXISTS           : 10,  // モード(存在確認)  *php
+	APP_WORK_CONTROLLER_MODE_DOC_STATE            : 11,  // モード(状態確認)  *php
+	APP_WORK_CONTROLLER_MODE_DOC_EDIT             : 12,  // モード(文書編集)  *php
+	APP_WORK_CONTROLLER_MODE_REMOVE               : 13,  // モード(一括削除)  *php
+
+	WEB_SEARCH : function(){
+		return [
+			{"text" : WORD_J_JS_DEFINE_001, "url"  : "http://www.google.com/search?hl=$(SOURCE)&q=%s"},
+			{"text" : WORD_J_JS_DEFINE_002, "url"  : "http://translate.google.com/#$(SOURCE)/$(TARGET)/%s"},
+			{"text" : WORD_J_JS_DEFINE_003, "url"  : "http://$(SOURCE).wikipedia.org/wiki/%s"}
+		];
+	},
+
+	eod : null
+};

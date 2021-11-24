@@ -1,0 +1,302 @@
+minhon.Help = minhon.Help || (function(){
+    "use strict";
+    
+    //------------------------------
+    // constant
+    //------------------------------
+    Help.TYPE = {
+        "HELP"    : "help",
+        "FAQ"     : "faq",
+        "HINT"    : "hint",
+        "TOOLTIP" : "tooltip"
+    };
+    Help.DISPLAY = {
+        "DIALOG"  : "dialog",
+        "POPOVER" : "popover",
+        "CONTENT" : "content"
+    }
+    Help.RATIO = 0.8;
+    
+    //------------------------------
+    // variable
+    //------------------------------
+    var self = null;
+    var $dialog = null;
+    var cache = {};
+    var target = null;
+    var $dialogPic = null;
+    
+    //------------------------------
+    // function
+    //------------------------------
+    /**
+     * 
+     */
+    function Help(){
+        self = this;
+    };
+    
+    (function(){
+        /**
+         * 
+         */
+        this.initialize = function(){
+            self.refresh();
+        };
+        
+        this.refresh = function(){
+            $(".minhon-help").off("click");
+            $(".minhon-help").on("click", self.onClick);
+
+            $(".minhon-help-menu").on("click", self.onClickMenu);
+
+            $("#content-help img").on("click", self.onclickExpandPicture);
+            
+            $(".minhon-help").each(function(){
+                if ( $(this).attr("data-help-display") == Help.DISPLAY.CONTENT ){
+                    $(this).removeClass("minhon-help");
+                    $(this).trigger("click");
+                    $(this).off("click");
+                }
+            });
+            // ダイアログ外からのスクロール
+            $(".ui-widget-overlay").on("wheel", function(event){
+                $("#content-help-body").scrollTop($("#content-help-body").scrollTop() + event.originalEvent.deltaY);
+            });
+
+            // 矢印キーでのスクロール
+            $(document).on("keydown", function(e){
+                switch(e.which){
+                    case 38: // Key[↑]
+                    $("#content-help-body").scrollTop($("#content-help-body").scrollTop() - 50);
+                    break;
+        
+                    case 40: // Key[↓]
+                    $("#content-help-body").scrollTop($("#content-help-body").scrollTop() + 50);
+                    break;
+                }
+            });
+        };
+        
+        /**
+         * 
+         */
+        this.onClick = function( event ){
+            event.stopPropagation();
+            
+            target = event.target;
+            
+            var id      = $(this).attr("data-help-id") || null;
+            var pid     = $(this).attr("data-help-pid") || null;
+            var display = $(this).attr("data-help-display") || null;
+            
+            self.load(pid, id, display);
+            
+            return false;
+        };
+
+        this.onClickMenu = function( event ){
+            event.stopPropagation();
+
+            var id = $(this).attr("data-help-id");
+            
+            $("#content-help-body").animate({
+                scrollTop: $("#content-help-body").scrollTop() + $("[id='content-help-block-" + id + "']").position().top
+            }, 300);
+
+            return false;
+        };
+        
+        this.open = function( pid, id, display ){
+            self.load(pid, id, display);
+        };
+        
+        this.load = function( pid, id, display ){
+            var targetID = pid || id;
+            
+            if ( cache[targetID] ){
+                self.show(targetID, display, cache[targetID].title, cache[targetID].data);
+            } else {
+                jQuery.ajax({
+                    async    : false,
+                    url      : "/app/helpController.php",
+                    type     : "GET",
+                    data     : {
+                        "q_pid" : pid,
+                        "q_id"  : id
+                    },
+                    dataType : "json",
+                    error    : function(){
+                        minhon.ui.notify(null, minhon.define.STR_AJAX_ERROR);
+                    },
+                    success  : function( res ){
+                        if ( res.result === minhon.define.RES_OK ){
+                            cache[targetID] = res;
+                            
+                            self.show(targetID, display, res.title, res.data);
+                        } else {
+                            minhon.ui.notify(null, res.message);
+                        }
+                    }
+                });
+            }
+        };
+        
+        this.show = function( id, display, title, data ){
+            if ( display == Help.DISPLAY.DIALOG ){
+                self.showDialog(id, title, data);
+            } else if ( display == Help.DISPLAY.POPOVER ){
+                self.showPopover(id, title, data);
+            } else if ( display == Help.DISPLAY.CONTENT ){
+                self.showContent(id, title, data);
+            } else {
+                self.showDialog(id, title, data);
+            }
+            
+            self.refresh();
+        };
+        
+        this.showDialog = function( id, title, data ){
+            var isInit = ! $dialog;
+            $dialog = $dialog || $("<div>").addClass("content-help");
+            
+            $dialog.data("id", id);
+            $dialog.html(data);
+
+            self.resizeDialog();
+
+            if ( ! isInit && $dialog.dialog("isOpen") ){
+                $dialog.dialog({"title": title});
+                return;
+            }
+            
+            $dialog.dialog({
+                "modal"  : true,
+                "title"  : title,
+                "width"  : $(window).width() * Help.RATIO,
+                "height" : $(window).height() * Help.RATIO,
+                "open"   : function(){
+                    $(".ui-widget-overlay").on("click", function(){
+                        $dialog.dialog("close");
+                    });
+
+                    self.resizeDialog();
+                },
+                "resize" : self.resizeDialog
+            });
+            
+            if ( isInit ){
+                
+                // close
+                var $a = $("<a>")
+                    .addClass("btn btn-default btn-help-dialog-menu pull-right")
+                    .append($("<i>").addClass("glyphicon glyphicon-remove"))
+                    .on("click", self.onClickButtonDialogClose);
+                $dialog.closest(".ui-dialog").find(".ui-dialog-titlebar-close").before($a);
+                
+                // expand
+                $dialog.closest(".ui-dialog").find(".ui-dialog-titlebar-close").before($("<a>")
+                    .addClass("btn btn-default btn-help-dialog-menu pull-right")
+                    .append($("<i>").addClass("glyphicon glyphicon-resize-full"))
+                    .on("click", self.onClickButtonDialogExpand)
+                );
+                
+                $dialog.closest(".ui-dialog").find(".ui-dialog-titlebar-close").remove();
+            }
+        };
+        
+        this.onClickButtonDialogClose = function(){
+            $dialog.dialog("close");
+        };
+        
+        this.onClickButtonDialogExpand = function(){
+            if ( $(this).find(".glyphicon-resize-full").length == 0 ){
+                $(this).find(".glyphicon-resize-small").removeClass("glyphicon-resize-small").addClass("glyphicon-resize-full");
+                
+                $dialog.dialog("option", {
+                    "width"  : $(window).width() * Help.RATIO,
+                    "height" : $(window).height() * Help.RATIO
+                });
+            } else {
+                $(this).find(".glyphicon-resize-full").removeClass("glyphicon-resize-full").addClass("glyphicon-resize-small");
+                
+                $dialog.dialog("option", {
+                    "width"  : $(window).width() * 0.98,
+                    "height" : $(window).height() * 0.98
+                });
+            }
+
+            self.resizeDialog();
+            
+            $dialog.closest(".ui-dialog").position({ my: "center", at: "center", of: window });
+        };
+
+        this.resizeDialog = function(){
+            var h = $(".ui-dialog-content").height();
+            $("#content-help-list").css("height", h);
+            $("#content-help-body").css("height", h);
+        };
+        
+        this.onClickButtonDialogMenu = function(){
+            var id = $dialog.data("id");
+            
+            if ( ! id ) return;
+            
+            id = id.split(".")[0];
+            
+            self.load(id, null, Help.DISPLAY.DIALOG);
+        };
+        
+        this.showPopover = function( id, title, data ){
+            $(target).attr("title", title).attr("data-content", data).popover({
+                "html"      : true,
+                "placement" : "auto",
+                "trigger"   : "manual",
+                "container" : "body"
+            });
+            $(target).popover("toggle");
+        };
+        
+        this.showContent = function( id, title, data ){
+            $(target).addClass("content-help").html(data);
+            $(target).prepend($("<h3>").text(title));
+        };
+
+        this.onclickExpandPicture = function(){
+            var pic = $(this).clone();
+            // 比率計算
+            var heightRatio = ($(window).height() * 0.88) / $(this).height();
+            var widthRatio = ($(window).width() * 0.88) / $(this).width();
+            if ( heightRatio < widthRatio ){
+                pic.height($(this).height() * heightRatio);
+                pic.width($(this).width() * heightRatio);
+            } else {
+                pic.height($(this).height() * widthRatio);
+                pic.width($(this).width() * widthRatio);
+            }
+            $dialogPic = $("<div>");
+            $dialogPic.append(pic);
+            $dialogPic.dialog({
+                modal : true,
+                height : "auto",
+                width : "auto",
+                "open"   : function(){
+                    $(".ui-widget-overlay").on("click", function(){
+                        $dialogPic.dialog("destroy");
+                        $(event.target).remove();
+                    });
+                    $(".ui-dialog-titlebar-close").on("click", function(){
+                        $dialogPic.dialog("destroy");
+                        $(event.target).remove();
+                    })
+                }
+            });
+        };
+    }).apply(Help.prototype);
+    
+    return Help;
+})();
+
+$(function(){
+    new minhon.Help().initialize();
+});

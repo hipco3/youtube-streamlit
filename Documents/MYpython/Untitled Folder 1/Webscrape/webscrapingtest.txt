@@ -1,0 +1,50 @@
+
+HOME/ Newsletter / Regarding the consideration of the safety of additives as nanomaterials in EU countries (See titanium dioxide for the case study)
+Regarding the consideration of the safety of additives as nanomaterials in EU countries
+(See titanium dioxide for the case study)
+So-called nanotechnology, which utilizes materials consisted of tiny particles on the nano level, is attracting attention in the food field in hope of improvement of food texture/solubility of additives, creation of new tastes or sensations.
+However, the EU has proceeded with the discussions on the safety of nanotechnology. European Food Safety Authority (EFSA), which defines such materials as "nanomaterial", issued their view that titanium dioxide (E171) approved for use as an additive can no longer be considered safe when used as a food additive.
+
+EFSA concluded that the use of titanium dioxide as a food additive does not raise a health concern to consumers based on the available data in 2016, and in 2018 they concluded the result would not be changed after considering the outcome of four new papers on its possible toxicity when used as a food additive. Even though there are no results to invalidate this conclusion, France, however, announced a ban on the use of the additive in April 2019 as an interim measure until the results of the EFSA's reassessment of safety are available, and banned foods containing this additive from the market for a limited period of one year starting January 1, 2020,  (This ban has been extended for another year and is still in effect.)
+
+We understand this view by EFSA is in response to this series of developments. We would like to introduce what "nanomaterial" and the concept of its safety are in this article.
+
+Regarding the definition of "nanomaterial"
+EFSA cites the International Organization for Standardization (ISO) definition of "nanomaterial" as follows in the following guidance.
+
+EFSA Scientific Committee Guidance on Nanotechnology
+
+Guidance on risk assessment of the application of nanoscience and nanotechnologies in the food and feed chain: Part 1, human and animal health - - 2018 - EFSA Journal - Wiley Online Library
+
+The following is an excerpt from 1.2.2 Definition of nanomaterial in the above guidance
+
+- The International Organization for Standardization (ISO) has defined nanomaterial as a material with any external dimension on the nanoscale ('nano-object') or having an internal or surface structure in the nanoscale ('nanostructured material')
+- 'Nanoscale' is defined as ranging from approximately 1 to 100 nm
+According to the above content, the definition of the substance "nanomaterial" by EFSA seems to be particles within the size range of 1 to 100 nm or materials with an internal or surface structure in the range between 1-100 nm. 　EFSA indicates the particle size distribution of material that falls under "nanomaterial" in the following guidance as follows.
+
+- The European Commission recommended that a material with 50% or more of the particles in the number size distribution in the nanoscale (1–100 nm) should be regarded a nanomaterial.
+- Although this recommendation is currently under review, and has not yet been adopted under the relevant regulatory frameworks, the Scientific Committee advises to take this and any future reviews into consideration when assessing safety of materials consisting of particles.
+Perception of titanium dioxide as a "nanomaterial"
+EFSA has commented on titanium dioxide (E171) in this view.
+
+Titanium dioxide E171 contains at most 50% of particles in the nano range (i.e. less than 100 nanometres) to which consumers may be exposed.
+Seemingly titanium dioxide is described to fall outside the definition of nanomaterial, on the other hand, there is a part indicating the aforementioned guidance on nanotechnology has been applied to additives for the first time. Their view continues as follows.
+
+Uncertainty around the characterisation of the material used as the food additive (E171) was also highlighted, in particular with respect to particle size and particle size distribution of titanium dioxide used as E171.
+This may indicate that the above definition of particle size distribution does not always apply to titanium dioxide. It then goes on to the following and points out its genotoxicity.
+
+the Panel* concluded that titanium dioxide can no longer be considered safe as a food additive. A critical element in reaching this conclusion is that we could not exclude genotoxicity concerns after consumption of titanium dioxide particles. After oral ingestion, the absorption of titanium dioxide particles is low, however they can accumulate in the body
+
+* EFSA's expert Panel on Food Additives and Flavourings (FAF)
+
+Finally, EFSA concludes its views with the following.
+
+EFSA concluded that a concern for genotoxicity of TiO2 particles cannot be ruled out. Based on this concern, EFSA's experts no longer consider titanium dioxide safe when used as a food additive. This means that an Acceptable Daily Intake (ADI) cannot be established for E171.
+It will be up to the EU Member States to decide how to reflect the EFSA's perception of titanium dioxide in their legislation, based on the definition of nanomaterials mentioned so far. However, the European Commission held an expert meeting and recommended a ban on its use in the EU after the issuance of the guidance by EFSA this time. We believe that more similar safety assessments for nanomaterial will be conducted for food additives in the EU in the future and closely watch this trend.
+
+It would be grateful if this article on EFSA's view on titanium dioxide will help those who are handling products using nanotechnology or considering exporting products containing so-called "nanomaterial" to the EU.
+
+Reference
+
+Titanium dioxide: E171 no longer considered safe when used as a food additive
+

@@ -1,0 +1,112 @@
+
+
+
+EU諸国におけるナノ材料（nano material）としての添加物の安全性に対する考え方について（二酸化チタンの事例に見る）
+
+
+		By        
+亀山 明一 
+| 
+         2021年7月7日 
+         
+
+0 Comment
+
+
+
+
+Tweet Pocket　ナノレベルの小さな粒子から成る素材を利用する、いわゆるナノテクノロジーは、食品分野においても、食品のテクスチャー（食感）改良、添加物の溶解性向上、新しい味や感覚を創り出す等、様々な方面で注目されています
+　しかしながらEUではその安全性についての議論が進んでおり、この様な素材を「ナノ材料(nano material)」と呼んで独自に定義付けしているEFSA（欧州食品安全機関）はこの程、食品添加物として使用が認可されている二酸化チタン（Titanium dioxide: E171）について、「ナノ材料(nano material)」を含むものとして、食品添加物としての安全性はもはや担保出来ないとの見解を出しました
+　二酸化チタンについて、EFSAは2016年、二酸化チタンの安全性について入手可能な現在のデータに基づき消費者に対する健康影響は示されなかったと結論付け、その後2018年には更に、食品添加物としての使用時に考えうる毒性に関する4つの新たな論文についての評価を行った上でもこの結論に変更はないとしていましたしかしながらフランスでは、この結論を無効とする結果はないとしながらも、EFSAによる安全性の再評価結果が得られるまでの暫定措置として2019年4月にこの添加物の使用禁止を発表、2020年1月1日より1年間と期間を限定してこれを含む食品の市場投入を禁止しました（この禁止措置はその後1年間延長され、現在も継続中です）
+　今回のEFSAの見解は、これらの一連の動きに続くものと思われますが、本投稿ではこの見解を通して、そもそもEUにおける「ナノ材料(nano material)」とは何なのか、又その安全性についての考え方はどの様なものなのかご紹介出来ればと思います
+「ナノ材料（nanomaterial）」の定義について
+
+　EFSAでは、以下のガイダンスにおいて「ナノ材料（nanomaterial）」について、以下の通りのISOが定めた定義を引用しています
+EFSA Scientific Committee Guidance on Nanotechnology
+Guidance on risk assessment of the application of nanoscience and nanotechnologies in the food and feed chain: Part 1, human and animal health – – 2018 – EFSA Journal – Wiley Online Library
+　以下、上記ガイダンス内1.2.2 Definition of nanomaterialより抜粋
+-The International Organization for Standardization (ISO) has defined nanomaterial as a material with any external dimension on the nanoscale (‘nano-object’) or having an internal or surface structure in the nanoscale (‘nanostructured material’)
+（訳：ISOにおいて、nanomaterial（ナノ材料）を、ナノスケールの外形寸法を持つ材料（ナノ物体）若しくは、ナノスケールの内部構造又は表面構造を持つ材料（ナノ構造材料）と定義付けている）
+-‘Nanoscale’ is defined as ranging from approximately 1 to 100 nm
+（訳：「ナノスケール」とは、おおよそ1から100ナノメーターの寸法のことをいう）
+　上記の内容より、EFSAでは、大きさが1～100ナノメーターの物質、若しくはその様な大きさの内部構造や表面構造の物質をナノ材料（nanomaterial）としている様です
+　又、このナノ材料（nanomaterial）に該当するものの粒度分布について、EFSAは同ガイダンスにおいて以下の通り記載しています
+-The European Commission recommended that a material with 50% or more of the particles in the number size distribution in the nanoscale (1–100 nm) should be regarded a nanomaterial.
+（訳：EUではナノスケール(1から100ナノメーター)の大きさの粒子の粒度分布が50%以上の素材をnanomaterial（ナノ材料）とみなすことを推奨している）
+-Although this recommendation is currently under review, and has not yet been adopted under the relevant regulatory frameworks, the Scientific Committee advises to take this and any future reviews into consideration when assessing safety of materials consisting of particles.
+（訳：この推奨内容は現在検討段階であり、関連法規の枠組み内で未採用ではあるが、Scientific Committee(科学委員会)は、粒子から成る材料の安全性を調査する際には、この考え方とこれに基づくその後の評価をすべて考慮に入れる様勧告している）
+二酸化チタンの「ナノ材料（nanomaterial）」としての位置付けについて
+
+　これに対し、EFSAは今回の見解で二酸化チタン（Titanium dioxide: E171）について以下の通り述べています
+Titanium dioxide E171 contains at most 50% of particles in the nano range (i.e. less than 100 nanometres) to which consumers may be exposed.
+（訳：二酸化チタンE171は、消費者がさらされる可能性があるナノレベル（即ち100ナノメーター以下）の粒子の含有量は多くて50%である）
+ 　一見、ナノ材料の定義から外れる様な書き方をしていますが、その一方で、前述のガイダンスのナノテクノロジーに関する考え方が添加物に初めて適用されたとしており、更に以下の通り続けています
+Uncertainty around the characterisation of the material used as the food additive (E 171) was also highlighted, in particular with respect to particle size and particle size distribution of titanium dioxide used as E 171.
+（訳：食品添加物E171として使用されている素材、すなわちE171として使用されている二酸化チタンのとりわけ粒径並びに粒度分布をどう特徴付けするかが確定していないことが注目されている）
+　このことから、上記粒度分布の定義については、必ずしも二酸化チタンに当てはまるかは確実ではないとの考え方を示しているものと思われます
+　そしてその上で、以下の通り記載しており、遺伝子毒性について指摘しています
+the Panel（注） concluded that titanium dioxide can no longer be considered safe as a food additive. A critical element in reaching this conclusion is that we could not exclude genotoxicity concerns after consumption of titanium dioxide particles. After oral ingestion, the absorption of titanium dioxide particles is low, however they can accumulate in the body
+（注）EFSA’s expert Panel on Food Additives and Flavourings (FAF)
+（＝食品添加物並びに香料に関するEFSA専門委員会(FAF)）
+（訳：委員会では二酸化チタンは安全とすることは出来ないと結論付けたその結論に至る決め手となったのは、二酸化チタンの粒子を消費した後の遺伝毒性の懸念が拭いきれない点である経口摂取後、二酸化チタンの粒子の吸収性は低いが、体内に蓄積される）
+　最後にEFSAは見解を次のように結んでいます
+
+EFSA concluded that a concern for genotoxicity of TiO2 particles cannot be ruled out. Based on this concern, EFSA’s experts no longer consider titanium dioxide safe when used as a food additive. This means that an Acceptable Daily Intake (ADI) cannot be established for E171.
+（訳：EFSAは、二酸化チタンの粒子について遺伝子毒性の懸念がぬぐい切れないと結論付けており、この懸念を基に、食品添加物としての安全性はもはや担保出来ないとしているこのことは、E171には一日摂取許容量（ADI）が設定出来ないことを意味する）
+　これまで述べて来たナノ材料（nanomaterial）に対する定義付けに基づく二酸化チタンに関するEFSAの今回の見解について、最終的に各関連法令にどう反映させるかの判断は、EU各加盟国の手に委ねられることになりますが、その後欧州委員会では専門家会議が開かれ、EU内での使用禁止が提言された模様です今回の事例を皮切りに、今後もEUでは食品添加物について、「ナノ材料」という切り口で同様の安全性評価が下される可能性もあると考えており、その動向が注目されるところです
+　ナノテクノロジーを利用した商品を取り扱っておられる皆様、特にいわゆる「ナノ材料（nanomaterial）」に該当する素材を含む食品をEUへ輸出することを考えられておられる皆様におかれまして、今回の二酸化チタンに関するEFSAの見解が少しでも参考になれば幸いです
+参照：
+Titanium dioxide: E171 no longer considered safe when used as a food additive
+
+食品表示作成・チェックサービス（国産食品、輸入食品）：国内で製造し国内で販売する食品、海外で製造し国内で販売する食品向けの食品表示サービスを提供しています新しい食品表示基準への改版業務、現行のラベルのダブルチェック、添加物やアレルゲン等の社内チェック基準づくりをサポートいたします国内向けの食品表示作成・チェックサービスはこちら
+食品表示チェック・翻訳サービス（海外向け、輸出食品）：国内で製造し海外で販売する食品、海外で製造し海外で販売する食品向けの食品表示サービスです提供実績国数は約20ヵ国、各国現地の検査機関等との協業により、実態に沿ったラベルレビューや原材料リサーチ、翻訳をご提供いたします海外向けの食品表示チェック・翻訳サービスはこちら
+
+関連記事一覧2021年4月9日 最新版：各国の食品表示規制のトレンドと現在の状況2021年8月6日 シンガポール　個別食品規格を削除する改定について意見募集2021年6月7日 米国バイオ工学食品情報開示基準について～日本の遺伝子組換え表示制度との違いと輸出時の注意点～2021年7月7日 輸出食品の原材料調査と食品表示チェックの実務上の大切なポイント
+Tweet PocketThe following two tabs change content below.この記事を書いた人最新の記事
+
+
+
+
+亀山 明一品質管理担当 ： 株式会社ラベルバンク
+添加物製剤の業界に長く在籍した経験を活かし、添加物の調査業務を中心に、調査結果の英文と日本語との整合性確認業務に従事していますまた原材料の使用基準や食品表示基準などについて、英語でのセミナー講師も担当しています趣味は外国文化に触れることと旅行
+■最近の講演実績（Webセミナー）
+
+・2020年10月20日　Regulatory Requirements of Food Ingredients/Additives Used in Japan
+
+　ChemLinked（REACH24Hコンサルティンググループ）様主催
+
+>> 講演・セミナーの詳細はこちら（英語サイト）
+
+
+
+
+
+
+
+
+最新記事 by 亀山 明一 (全て見る)
+
+
+
+プラントベース食品について - 2021年10月5日
+
+
+EU諸国におけるナノ材料（nano material）としての添加物の安全性に対する考え方について（二酸化チタンの事例に見る） - 2021年7月7日
+
+
+くるみの義務表示化の動きについて - 2021年3月5日
+
+
+
+
+ 
+
+2021年07月07日 | お役立ち
+
+ 
+Post navigation
+← 輸出食品の原材料調査と食品表示チェックの実務上の大切なポイント
+シンガポール　個別食品規格を削除する改定について意見募集 →
+
+
+

@@ -1,0 +1,197 @@
+/* 共通 */
+.content-help {}
+	/* ブロック */
+	.content-help .content-help-block {
+		padding-bottom: 40px;
+		border-bottom: 2px solid #ccc;
+	}
+	.content-help .content-help-block:last-child {
+		border: none;
+	}
+	/* タイトル - 大項目 */
+	.content-help h3 {
+		margin-top: 20px;
+		margin-bottom: 20px;
+		padding-left: 10px;
+		font-size: 2.25em;
+		font-weight: bold;
+		border-left: 10px solid #ccc;
+	}
+	/* タイトル - 中項目 */
+	.content-help h4 {
+		margin-top: 0;
+		margin-bottom: 16px;
+		font-size: 1.75em;
+		font-weight: bold;
+		background: linear-gradient(transparent 70%, #ddd 70%);
+	}
+	/* タイトル - 小項目 */
+	.content-help h5 {
+		margin-top: 0;
+		margin-bottom: 12px;
+		font-size: 1.5em;
+		font-weight: bold;
+	}
+	/* 文章 */
+	.content-help p {
+		margin-bottom: 16px;
+	}
+	/* 画像 */
+	.content-help img {
+		margin-bottom: 20px;
+		border: 1px solid #ccc;
+		max-width: 75%;
+		display: block;
+	}
+	.content-help .image {
+		margin-bottom: 10px;
+		padding: 30px 0;
+		border: 1px solid #ccc;
+		background-color: #f6f6f6;
+		text-align: center;
+	}
+	.content-help .image.pull-left {
+		margin-right: 20px;
+	}
+	.content-help .image img {
+		margin-bottom: 0px;
+		border: none;
+	}
+	/* テーブル */
+	.content-help table {
+		margin-bottom: 40px;
+	}
+	.content-help .th-item {
+		width: 30%;
+	}
+	/* リスト */
+	.content-help ul {
+		margin-left : 20px;
+	}
+	.content-help ul li {
+		margin-bottom : 6px;
+		list-style-type: disc;
+	}
+	/* ノート */
+	.content-help .alert p:last-child {
+		margin-bottom: 0;
+	}
+	
+	.content-help div.menu:first-child {
+		margin-bottom: 10px;
+		padding: 4px 0;
+		border-bottom: 1px solid #CCC;
+	}
+	.content-help div.menu:last-child {
+		margin-top: 10px;
+		padding: 4px 0;
+		border-top: 1px solid #CCC;
+	}
+	.content-help div.menu a {
+		font-size: 0.7em;
+	}
+	.content-help div.content > div {
+		margin-bottom : 20px;
+		padding-bottom : 20px;
+		border-bottom : 1px solid #DDD;
+	}
+	.content-help div.content h5 {
+		font-size : 2em;
+	}
+	
+	.content-help div.content dl > * {
+		margin-bottom : 6px;
+	}
+	.content-help div.content img:not(.noframe) {
+		margin-bottom : 16px;
+		border : 1px solid #CCC;
+		-webkit-box-shadow: 1px 1px 1px rgba(0,0,0,.5);
+		-moz-box-shadow: 1px 1px 1px rgba(0,0,0,.5);
+		box-shadow: 1px 1px 1px rgba(0,0,0,.5);
+	}
+	.content-help table.help-table {
+		table-layout: fixed;
+		width: 80%;
+	}
+
+/* ダイアログ */
+.btn-help-dialog-menu {
+	margin-left: 20px;
+	padding: 4px;
+	border: medium none;
+	background: transparent none repeat scroll 0 0;
+}
+.btn-help-dialog-menu i {
+	color: #444;
+}
+
+#content-help-list {
+	overflow: auto;
+	font-size: 0.8em;
+}
+	#content-help-list .list-group-item {
+		padding: 6px 12px;
+	}
+#content-help-body {
+	overflow: auto;
+}
+
+.zoomContainer {
+	z-index: 2000;
+}
+
+/** ヘルプ詳細 **/
+/* ヘルプ詳細 - リスト */
+/* ヘルプ詳細 - ボディ */
+#content-help-detail #content-help-body .content-help-block:first-child .content-help-title {
+	margin-top: 0;
+}
+
+
+.content-help-detail {}
+	.content-help-detail h4 {
+		margin: 30px 0 10px 0;
+		border-bottom: 3px solid #000;
+	}
+
+/* 個別 */
+.content-help-1 {}
+	.content-help-1 h5 + p {
+		margin-bottom: 4px;
+	}
+
+/* search.html */
+#form-help-search {}
+	#form-help-search li {
+		margin: 0;
+		padding: 0;
+	}
+.hit {
+	padding: 0 2px;
+	color: #357EBD;
+	font-weight: bold;
+	background-color: #d1e3f2;
+}
+.list-help li:hover {
+	background-color: #efefef;
+}
+.list-group-item.minhon-help p {
+	line-height: 1.5em;
+}
+
+.image-balloon {
+	margin-bottom: 16px;
+}
+.image-balloon img {
+	margin-bottom: 4px;
+	display: block;
+}
+.text-balloon {
+	margin-bottom: 4px ! important;
+	color: rgb(253, 80, 80);
+	font-size: 0.8em;
+}
+
+.help-print-margin {
+	display: none !important;
+}

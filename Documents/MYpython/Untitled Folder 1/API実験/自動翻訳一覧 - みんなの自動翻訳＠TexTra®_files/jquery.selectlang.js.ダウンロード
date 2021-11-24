@@ -1,0 +1,287 @@
+(function($){
+    var LANG_NN = "--";
+
+    var methods = {
+        init : function( options ){
+            this.data("options", $.extend({
+                "onChanged" : null,
+                "single"    : false,
+                "reverse"   : true,
+                "langS"     : LANG_NN,
+                "langT"     : LANG_NN
+            }, options));
+
+            var root = function( obj ){
+                return $(obj).closest(".select-lang");
+            };
+
+            this.addClass("select-lang");
+
+            this.find(".btn-lang-s")
+                .on("click", function( event ){
+                    if( $(this).attr("disabled") == "disabled" ){
+                        return false;
+                    }
+
+                    $(this).closest(".select-lang").find(".btn-lang").removeClass("active");
+                    $(this).closest(".select-lang").find(".btn-lang-select").removeClass("active");
+
+                    var $dialog = $(this).closest(".select-lang").find(".dialog-select-lang");
+                     
+                    if ( $dialog.find(".select-lang-list-s").is(":visible") ){
+                        $dialog.hide();
+
+                        $(this).removeClass("active");
+                    } else {
+                        $dialog.find(".select-lang-list-s .btn-lang-select-s-" + langS(root(this))).addClass("active");
+
+                        $dialog.find(".select-lang-list-s").show();
+                        $dialog.find(".select-lang-list-t").hide();
+                        $dialog.css("left", "auto").show();
+
+                        $(this).addClass("active");
+                    }
+
+                    return false;
+                })
+            ;
+
+            this.find(".btn-lang-t")
+                .on("click", function( event ){
+                    if( $(this).attr("disabled") == "disabled" ){
+                        return false;
+                    }
+
+                    $(this).closest(".select-lang").find(".btn-lang").removeClass("active");
+                    $(this).closest(".select-lang").find(".btn-lang-select").removeClass("active");
+
+                    var $dialog = $(this).closest(".select-lang").find(".dialog-select-lang");
+
+                    if ( $dialog.find(".select-lang-list-t").is(":visible") ){
+                        $dialog.hide();
+
+                        $(this).removeClass("active");
+                    } else {
+                        $dialog.find(".select-lang-list-s").hide();
+                        $dialog.find(".select-lang-list-t .col-lang-t").hide();
+                        $dialog.find(".select-lang-list-t .col-lang-t[data-lang-s='" + langS(root(this)) + "']").show();
+                        $dialog.find(".select-lang-list-t .col-lang-t[data-lang-s='" + langS(root(this)) + "'] .btn-lang-select-t-" + langT(root(this))).addClass("active");
+                        $dialog.find(".select-lang-list-t").show();
+                        $dialog.css("left", "auto").show();
+
+                        $(this).addClass("active");
+                    }
+
+                    return false;
+                })
+            ;
+
+            this.find(".btn-lang-select")
+                .on("click", function( event ){
+                    var that = root(this);
+
+                    /*
+                    if ( ! root(this).data("options").single ){
+                        if ( $(this).hasClass("btn-lang-s") ){
+                            event.stopPropagation();
+                            return true;
+                        }
+                    }
+                    */
+
+                    that.find(".btn-lang").removeClass("active");
+                    
+                    that.find(".dialog-select-lang").hide();
+
+                    if ( $(this).hasClass("btn-lang-select-s") ){
+                        var lang = $(this).attr("data-lang-s");
+                        that.find("input.lang-s").val(lang);
+
+                        if ( that.find(".btn-lang-select-t[data-lang-s='" + langS(that) + "'][data-lang-t='" + langT(that) + "']").length == 0 ){
+                            var lang = that.find(".btn-lang-select-t[data-lang-s='" + langS(that) + "']").first().attr("data-lang-t");
+                            that.find("input.lang-t").val(lang);
+                        }
+                    } else {
+                        var lang = $(this).attr("data-lang-t");
+                        that.find("input.lang-t").val(lang);
+                    }
+
+                    refresh(that);
+
+                    onChanged(that);
+
+                    return false;
+                })
+            ;
+
+            this.find(".btn-reverse").on("click", function(){
+                if( $(this).attr("disabled") == "disabled" ){
+                    return false;
+                }
+
+                $(this).closest(".select-lang").find(".btn-lang").removeClass("active");
+                $(this).closest(".select-lang").find(".dialog-select-lang").hide();
+
+                var that = root(this);
+                var langS = that.find("input.lang-s").val() || LANG_NN;
+                var langT = that.find("input.lang-t").val() || LANG_NN;
+
+                that.find("input.lang-s").val(langT);
+                that.find("input.lang-t").val(langS);
+
+                refresh(that);
+
+                onChanged(that);
+            });
+
+            if ( this.data("options").single ){
+                single(this);
+            } else {
+                double(this);
+            }
+
+            refresh(this);
+        },
+
+        single : function(){
+            single(this);
+        },
+
+        double : function(){
+            double(this);
+        },
+
+        isSingle : function(){
+            return this.data("options").single;
+            return (this.find(".dropdown-submenu").length == 0);
+        },
+
+        show : function(){
+            this.find(".select-lang-list").show();
+        },
+
+        hide : function(){
+            this.find(".select-lang-list").hide();
+        },
+
+        disabled : function( disabled ){
+            this.find(".btn-lang").attr("disabled", disabled);
+            this.find(".btn-reverse").attr("disabled", disabled);
+            refreshReverseButton(this);
+        },
+
+        refresh : function(){
+            refresh(this);
+        },
+
+        setLang : function( langS, langT ){
+            this.find("input.lang-s").val(langS);
+            this.find("input.lang-t").val(langT);
+            refresh(this);
+        },
+
+        langS : function(){
+            return langS(this);
+        },
+
+        langT : function(){
+            return langT(this);
+        },
+
+        onChanged : function(){
+            onChanged(this);
+        }
+    };
+
+    var refresh = function( that ){
+        var isAll = true;
+
+        var langS = that.find("input.lang-s").val() || LANG_NN;
+        var langT = that.find("input.lang-t").val() || LANG_NN;
+
+        isAll &= (langS == LANG_NN);
+        isAll &= (langT == LANG_NN);
+
+        if ( isAll ){
+            that.find(".lang")
+                .empty()
+                .text("AnyLang")
+            ;
+        } else {
+            that.find(".btn-lang-s .lang")
+                .text(that.find(".btn-lang-select-s-" + langS).first().text())
+            ;
+
+            if ( ! that.data("options").single ){
+                that.find(".btn-lang-t .lang")
+                    .text(that.find(".btn-lang-select-t-" + langT).first().text())
+                ;
+            }
+
+            if ( that.find(".btn-lang-select-t[data-lang-s='" + langT + "'][data-lang-t='" + langS + "']").length > 0 ){
+                that.find(".btn-reverse").attr("disabled", false);
+            } else {
+                that.find(".btn-reverse").attr("disabled", true);
+            }
+        }
+
+        that.find("input.lang-s").val(langS);
+        that.find("input.lang-t").val(langT);
+    };
+    // modify END
+
+    var single = function( that ){
+        that.data("options").single = true;
+
+        that.find("input.lang-t").val("");
+
+        that.find(".glyphicon-arrow-right").hide();
+        that.find(".btn-reverse").hide();
+        that.find(".btn-lang-t").hide();
+    };
+
+    var double = function( that ){
+        that.data("options").single = false;
+
+        that.find(".btn-reverse").show();
+        that.find(".btn-lang-t").show();
+
+        refreshReverseButton(that);
+    };
+
+    var onChanged = function( that ){
+        var langS = that.find("input.lang-s").val();
+        var langT = that.find("input.lang-t").val();
+
+        //if ( that.data("options").langS != langS || that.data("options").langT != langT ){
+            if ( typeof that.data("options").onChanged == "function" ){
+                that.data("options").onChanged(langS, langT);
+            }
+        //}
+    };
+
+    var refreshReverseButton = function( that ){
+        if ( that.data("options").single || ! that.data("options").reverse ){
+            that.find(".btn-reverse").hide();
+        }
+    };
+
+    var langS = function( that ){
+        return that.find("input.lang-s").val();
+    };
+
+    var langT = function( that ){
+        return that.find("input.lang-t").val();
+    };
+
+    $.fn.selectlang = function( method ) {
+        // メソッド呼び出し部分
+        if ( methods[method] ) {
+            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+        } else if ( typeof method === 'object' || ! method ){
+            return methods.init.apply(this, arguments);
+        } else {
+            $.error( 'Method ' +  method + ' does not exist on jQuery.tooltip' );
+        }
+    };
+})(jQuery);

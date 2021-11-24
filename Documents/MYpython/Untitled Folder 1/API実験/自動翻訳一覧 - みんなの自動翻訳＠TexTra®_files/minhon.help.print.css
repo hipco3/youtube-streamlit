@@ -1,0 +1,91 @@
+﻿@page { 
+	margin: 0;
+	size: auto;
+}
+body {
+	background-color: #fff;
+	letter-spacing: initial;
+}
+
+#g_navbar {
+	display : none;
+}
+#g_header {
+	display : none;
+}
+#g_menu {
+	display : none;
+}
+#g_footer {
+	display : none;
+}
+#content-help-list {
+	display: none;
+}
+hr {
+	page-break-after : always;
+	border : none;
+}
+
+.breadcrumb {
+	display : none;
+}
+
+h3 a {
+	display : none;
+}
+
+.container-main {
+	background-color: #fff;
+}
+.container-main > .section .panel {
+	box-shadow: none;
+	border: none;
+}
+
+.content-help-detail .btn-pdf {
+	display: none;
+}
+.content-help h3, .content-help h4, .content-help h5 {
+	font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Noto Sans Japanese", "ヒラギノ角ゴ ProN W3", Hiragino Kaku Gothic ProN, Arial, Meiryo, sans-serif !important;
+}
+.content-help h3.title {
+	font-size: 3em;
+	display: block !important;
+}
+.hidden-xs {
+	display: block !important;
+}
+
+.content-help-detail table,
+.content-help-detail tr,
+.content-help-detail td,
+.content-help-detail th,
+.content-help-detail tbody,
+.content-help-detail thead,
+.content-help-detail tfoot {
+    page-break-inside: avoid !important;
+}
+.content-help-detail img {
+	page-break-inside: avoid !important;
+	border: 1px solid #ccc;
+}
+.content-help-detail .alert {
+	page-break-inside: avoid !important;
+}
+#content-help-body {
+	width: 100%;
+	overflow: visible;
+}
+.th-item {
+	width: 100px;
+}
+
+.content-help-detail .new-page {
+	page-break-before: always;
+}
+
+.help-print-margin {
+	display: block !important;
+	border: none !important;
+}

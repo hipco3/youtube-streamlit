@@ -1,0 +1,7 @@
+print(type(123))
+print(type(123.4))
+print(type('hello'))
+print(type(False))
+print(type([1,2,3]))
+print(type((1,2,3)))
+print(type({'name':'Bob','age':28}))

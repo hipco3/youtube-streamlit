@@ -1,0 +1,32 @@
+.select-lang {
+    padding: 1px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+}
+.select-lang .btn {
+    padding: 4px 10px;
+}
+.btn-reverse {
+    border-radius: 4px ! important;
+}
+.dialog-select-lang {
+    position: absolute;
+    display: none;
+    z-index: 999;
+    width: 470px;
+    max-width: 470px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+.select-lang-list > div {
+    width: 150px;
+}
+.btn-lang-select {
+    padding: 4px;
+    display: block;
+}
+.btn-lang-select.active {
+    background-color: #e8f0fe;
+}

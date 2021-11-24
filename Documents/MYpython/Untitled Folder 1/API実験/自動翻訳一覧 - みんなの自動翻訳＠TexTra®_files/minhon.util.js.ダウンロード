@@ -1,0 +1,97 @@
+minhon.util = {
+	str2date : function( str ){
+		var date = null;
+		
+		var arrDate = str.split("-");
+		
+		if ( arrDate.length === 3 ){
+			date = new Date(arrDate[0], parseInt(arrDate[1])-1, arrDate[2]);
+		}
+		
+		return date;
+	},
+	
+	unique : function( array ){
+		var storage = {};
+		var uniqueArray = [];
+		
+		for ( var i=0; i<array.length; i++){
+			var value = array[i];
+			if ( !(value in storage) ){
+				storage[value] = true;
+				uniqueArray.push(value);
+			}
+		}
+		
+		return uniqueArray;
+	},
+
+	serializeForm : function( target ){
+		var res = {};
+
+		var tmp = $(target).serializeArray();
+
+		for ( var i=0; i<tmp.length; i++ ){
+			res[tmp[i].name] = tmp[i].value;
+		}
+
+		return res;
+	},
+	
+	modifyClass : function( target, removeClassName, addClassName ){
+		$(target).removeClass(function(index, className){
+			return (className.match(new RegExp("\\b" + removeClassName + "\\S+", 'g')) || []).join(' ');
+		}).addClass(addClassName);
+	},
+
+	jump : function( url ){
+		location = url;
+	},
+	
+	escapeHtml : function( str ){
+		return str.replace(/[&'`"<>]/g, function( match ){
+			return {
+				'&': '&amp;',
+				"'": '&#x27;',
+				'`': '&#x60;',
+				'"': '&quot;',
+				'<': '&lt;',
+				'>': '&gt;',
+			}[match]
+		});
+	},
+
+	unescapeHtml : function( str ){
+		return $("<div>").html(str).text();
+	},
+
+	cache : function( key, val ){
+		jQuery.ajax({
+			url      : "/app/cacheController.php",
+			type     : "POST",
+			data     : {
+				"q_key"   : key,
+				"q_value" : val
+			},
+			dataType : "json",
+			error    : function(){
+				//minhon.ui.notify("", minhon.define.STR_AJAX_ERROR);
+			}
+		});
+	},
+
+	// rtl言語判断
+	isLangRtl : function( lang ){
+		
+		var langArray = ["ar", "ur"];
+
+		if ( $.inArray(lang, langArray) != -1 ){
+			return true;
+		}else{
+			return false;
+		}
+		
+	},
+	
+	eod : null
+};

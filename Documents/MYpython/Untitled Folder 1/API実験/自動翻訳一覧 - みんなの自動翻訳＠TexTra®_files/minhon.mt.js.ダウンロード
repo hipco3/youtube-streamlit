@@ -1,0 +1,211 @@
+minhon.mt = {
+	initialize : function(){
+		$("#order_lang").selectlang({
+			"onChanged" : minhon.mt.onChangedLang
+		});
+		
+		var engine = $("input[name=q_mt_engine]:checked").val();
+		$("#model_" + engine).show();
+
+		$(".btn-download-menu").on("click", minhon.mt.onClickDownloadMenu);
+		$(".btn-download-pre").on("click", minhon.mt.onClickDownloadPre);
+		$(".btn-download").on("click", minhon.mt.onClickDownload);
+		$(".btn-download-unlock").on("click", minhon.mt.onClickDownloadUnlock);
+	},
+	
+	initializeProgress : function(){
+		setInterval(minhon.mt.progress, 3000);
+	},
+	
+	onChangedLang : function(){
+		var langS = $("#order_lang").selectlang("langS");
+		var langT = $("#order_lang").selectlang("langT");
+		
+		document.location = "./?q_lang_s=" + langS + "&q_lang_t=" + langT;
+	},
+	
+	onClickEngine : function( engine ){
+		$("div.model").hide();
+		$("#model_" + engine).show();
+	},
+	
+	onClickModel : function( obj ){
+		$("#form_mt_edit input[type=checkbox]").prop("checked", false);
+		
+		$(obj).closest("tr").find("td input[type=checkbox]").prop("checked", true);
+	},
+	
+	progress : function(){
+		var mtID = [];
+
+		jQuery.each($("#table-mt tr[data-progress=" + minhon.define.ON + "]"), function(){
+			mtID.push($(this).attr("data-id"));
+		});
+
+		if ( mtID.length == 0 ){
+			return true;
+		}
+
+		jQuery.ajax({
+			url      : "/app/mtController.php",
+			type     : "POST",
+			data     : {
+				"q_mode"  : minhon.define.APP_MT_CONTROLLER_MODE_PROGRESS,
+				"q_mt_id" : mtID
+			},
+			dataType : "json",
+			context  : this,
+			error    : function(){
+				//minhon.ui.notify(null, minhon.define.STR_AJAX_ERROR);
+			},
+			success  : function( res ){
+				if ( res.result === minhon.define.RES_OK ){
+					var downloadRemain = parseInt($("#download-remain").val());
+
+					for ( var key in res.data ){
+						var dat = res.data[key];
+
+						$("tr[data-id='" + key + "'] .td-progress").empty().append(dat["html"]);
+						
+						$("tr[data-id='" + key + "'] .btn-download-menu").removeClass("btn-default btn-info btn-warning btn-primary disabled");
+
+						if ( dat["download"] ){
+							if ( dat["state"] == minhon.define.DB_T_ADAPT_STATE_C ){
+								$("tr[data-id='" + key + "'] .btn-download-menu").addClass("btn-default");
+
+								if ( downloadRemain == 0 ){
+									$("tr[data-id='" + key + "'] .btn-download-menu").addClass("disabled");
+								}
+							} else if ( dat["state"] == minhon.define.DB_T_ADAPT_STATE_DL_W ){
+								$("tr[data-id='" + key + "'] .btn-download-menu").addClass("btn-info disabled");
+							} else if ( dat["state"] == minhon.define.DB_T_ADAPT_STATE_DL_P ){
+								$("tr[data-id='" + key + "'] .btn-download-menu").addClass("btn-warning disabled");
+							} else if ( dat["state"] == minhon.define.DB_T_ADAPT_STATE_DL_C ){
+								$("tr[data-id='" + key + "'] .btn-download-menu").addClass("btn-primary");
+							} else {
+								$("tr[data-id='" + key + "'] .btn-download-menu").addClass("btn-default disabled");
+							}
+
+							if ( dat["state"] == minhon.define.DB_T_ADAPT_STATE_DL_W || dat["state"] == minhon.define.DB_T_ADAPT_STATE_DL_P ){
+								$("tr[data-id='" + key + "']").find(".btn-edit, .btn-remove").removeClass("btn-default btn-primary").addClass("btn-default disabled");
+							} else if ( dat["state"] == minhon.define.DB_T_ADAPT_STATE_DL_C ){
+								$("tr[data-id='" + key + "']").find(".btn-edit").removeClass("btn-default btn-primary").addClass("btn-default disabled");
+								$("tr[data-id='" + key + "']").find(".btn-remove").removeClass("btn-default disabled").addClass("btn-default");
+							} else {
+								$("tr[data-id='" + key + "']").find(".btn-edit").removeClass("btn-default disabled").addClass("btn-primary");
+								$("tr[data-id='" + key + "']").find(".btn-remove").removeClass("btn-default disabled").addClass("btn-default");
+							}
+						} else {
+							$("tr[data-id='" + key + "'] .btn-download-menu").addClass("btn-default disabled");
+						}
+
+						$("tr[data-id='" + key + "'] .btn-download-menu").attr("data-state", dat["state"]);
+					}
+				} else {
+					for ( var key in res.data ){
+						var dat = res.data[key];
+
+						$("tr[data-id='" + key + "'] .td-progress").find("span").empty().append(dat["html"]);
+					}
+				}
+			}
+		});
+	},
+
+	onClickDownloadMenu : function(){
+		var adaptID = $(this).attr("data-id");
+		var state = $(this).attr("data-state");
+
+		if ( state == minhon.define.DB_T_ADAPT_STATE_C ){
+			minhon.mt.showDownloadPre(adaptID);
+		} else if ( state == minhon.define.DB_T_ADAPT_STATE_DL_C ){
+			minhon.mt.showDownloadMenu(adaptID);
+		}
+	},
+
+	showDownloadPre : function( adaptID ){
+		var downloadRemain = parseInt($("#download-remain").val());
+
+		if ( downloadRemain == 0 ){
+			$.alertable.alert(WORD_J_JS_MT_001);
+			return false;
+		}
+
+		$("#download-remain-str").text((downloadRemain < 0) ? WORD_J_JS_MT_002 : downloadRemain);
+
+		$("#form-download-request input[name='q_adapt_id']").val(adaptID);
+
+		$("#modal-download-pre").modal("show");
+	},
+
+	onClickDownloadPre : function(){
+		$("#form-download-request input[name='q_adapt_lock']").val(minhon.define.ON);
+
+		var data = $("#form-download-request").serializeArray();
+
+		jQuery.ajax({
+			async    : false,
+			url      : "/app/mtController.php",
+			type     : "POST",
+			data     : data,
+			dataType : "json",
+			success  : function( res ){
+				if ( res.result == minhon.define.RES_OK ){
+					var downloadRemain = parseInt($("#download-remain").val());
+					if ( downloadRemain > 0 ){
+						$("#download-remain").val(--downloadRemain);
+					}
+
+					var adaptID = $("#form-download-request input[name='q_adapt_id']").val();
+					$(".btn-download-menu[data-id='" + adaptID + "']").removeClass("btn-default btn-warning btn-primary").addClass("btn-info disabled");
+
+					$("#modal-download-pre").modal("hide");
+				} else {
+					minhon.ui.notify(null, res.message);
+				}
+			}
+		});
+	},
+
+	showDownloadMenu : function( adaptID ){
+		$("#form-download-request input[name='q_adapt_id']").val(adaptID);
+
+		$("#modal-download").modal("show");
+	},
+
+	onClickDownload : function(){
+		var adaptID = $("#form-download-request input[name='q_adapt_id']").val();
+		var downloadName = $("#modal-download input[name='q_download_name']").val();
+		$("#modal-download").modal("hide");
+
+		document.location = "./download.html?q_adapt_id=" + adaptID + "&q_download_name=" + downloadName;
+	},
+
+	onClickDownloadUnlock : function(){
+		$("#form-download-request input[name='q_adapt_lock']").val(minhon.define.OFF);
+
+		var data = $("#form-download-request").serializeArray();
+
+		jQuery.ajax({
+			async    : false,
+			url      : "/app/mtController.php",
+			type     : "POST",
+			data     : data,
+			dataType : "json",
+			success  : function( res ){
+				var adaptID = $("#form-download-request input[name='q_adapt_id']").val();
+				$(".btn-download-menu[data-id='" + adaptID + "']").removeClass("btn-default btn-info btn-warning btn-primary disabled").addClass("btn-default");
+
+				var downloadRemain = parseInt($("#download-remain").val());
+
+				if ( downloadRemain <= 0 ){
+					$(".btn-download-menu[data-id='" + adaptID + "']").addClass("disabled");
+				}
+
+				$("#modal-download").modal("hide");
+			}
+		});
+	},
+
+	eod :null
+};

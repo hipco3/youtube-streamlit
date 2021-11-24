@@ -1,0 +1,1607 @@
+var minhon = {};
+
+Number.prototype.add_comma = function(){
+	var to = String(this);
+	var tmp = "";
+	while (to != (tmp = to.replace(/^([+-]?\d+)(\d\d\d)/,"$1,$2"))){
+		to = tmp;
+	}
+	return to;
+}
+
+String.prototype.remove_comma = function(){
+	return parseInt(this.split(",").join("").trim(), 0);
+}
+
+minhon.common = {
+	initialize : function(){
+		minhon.common.style.initialize();
+
+		$("#g_footer .btn-page-top").on("click", function(){
+			$("html,body").animate({scrollTop: 0}, 500, "swing");
+		});
+
+		$(window).on("resize", minhon.common.resize);
+		minhon.common.resize();
+
+		if ( $("h3.title").length > 0 ){
+			$("#title-xs").append($("h3.title").clone(true));
+		}
+
+		if ( $(".minhon-translate").length > 0 ){
+			$(".btn-mtform").on("click", function(){
+				minhon.common.mtform.open();
+			}).on("mouseover", function(){
+				$(".minhon-translate").addClass("minhon-translate-target");
+			}).on("mouseout", function(){
+				$(".minhon-translate").removeClass("minhon-translate-target");
+			});
+			$(".btn-mtform").css("display", "inline-block");
+		} else {
+			$(".btn-mtform").hide();
+		}
+
+		minhon.common.remove.initialize();
+
+		minhon.common.selectListMT.initialize();
+
+		$(".btn-ribbon-menu").on("click", function(){
+			var isShow = minhon.define.ON;
+
+			if ( $(this).find("i").hasClass("glyphicon-chevron-down") ){
+				isShow = minhon.define.ON;
+				$(this).find("i").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
+				$("#g_navbar").show();
+			} else {
+				isShow = minhon.define.OFF;
+				$(this).find("i").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");
+				$("#g_navbar").hide();
+			}
+
+			minhon.util.cache(minhon.define.CACHE_RIBBON_MENU, isShow);
+
+			$(window).trigger("resize");
+		}).trigger("click");
+
+		$(document).on("click", ".btn-collapse", function(){
+			$(this).find(".glyphicon").toggleClass("glyphicon-chevron-down glyphicon-chevron-up");
+		});
+
+		// 自動ログアウト監視処理
+		$(document).on('click', minhon.common.heartbeat.update);
+		// 自分自身がiframeではない場合
+		if(window == window.parent){
+			setInterval(minhon.common.heartbeat.checkLoginState, 60000);
+			minhon.common.heartbeat.checkLoginState();
+		}
+
+		// ダイアログ発生時のwindowのスクロールの固定
+		$(document).on("dialogopen", function(){
+			minhon.common.bodyFix();
+		});
+		// ダイアログ閉じる際のwindowのスクロールの固定の解除
+		// jQuery
+		$(document).on("dialogclose", function(){
+			minhon.common.bodyFixReset();
+		});
+		// Bootstrap
+		$(document).on("hidden.bs.modal", function(){
+			// まだ開いているモーダルが存在する場合
+			if ( $(".modal:visible").length > 0 ){
+				$("body").addClass("modal-open");
+			}
+		});
+	},
+
+	resize : function(){
+		if ( $("#g_footer:visible").length == 0 ){
+			return;
+		}
+
+		$(".container-main").css("padding-bottom", "0");
+
+		if ( $(window).height() > $("#g_footer").offset().top + $("#g_footer").outerHeight() + 60 ){
+			var h = $(window).height() - ($("#g_footer").offset().top + $("#g_footer").outerHeight());
+			$(".container-main").css("padding-bottom", h-1 + "px");
+		} else {
+			$(".container-main").css("padding-bottom", "20px");
+		}
+	},
+
+	dialog : function( text, title, onClickOK ){
+		if ( $("#dialog-common").length == 0 ){
+			$("<div>").attr("id", "dialog-common").appendTo("body");
+		}
+
+		var d = $("#dialog-common")
+			.html(text)
+			.css("text-align", "left")
+			.dialog({
+				modal   : true,
+				title   : title,
+				width   : $(window).width() * 0.7,
+				height  : $(window).height() * 0.9,
+				buttons : [{
+					"text" : "OK",
+					"click" : function(){
+						if ( typeof onClickOK == "function" ){
+							onClickOK();
+						}
+						$(this).dialog("close")
+					}
+				}],
+				open: function(){
+					// フォーカス解除
+					$("input").blur();
+					$(".ui-widget-overlay").on("click", function(){
+						d.dialog("close");
+					});
+
+					$(".ui-dialog-content").scrollTop(0);
+
+					// z-index
+					var maxZ = 0;
+					$('*').each(function (){
+						var thisZ = $(this).css('zIndex');
+						thisZ = (thisZ === 'auto' ? (Number(maxZ) + 1) : thisZ);
+						if (thisZ > maxZ) maxZ = thisZ;
+					});
+			
+					$(".ui-widget-overlay").css("zIndex", (maxZ + 1));
+					$(this).parent().css("zIndex", (maxZ + 2));
+				},
+				close : function(){
+					$(this).dialog("destroy").remove();
+				}
+			})
+		;
+
+		$(".ui-dialog-buttonset button").addClass("btn btn-success");
+
+		// ダイアログ外からのスクロール
+		$(".ui-widget-overlay").on("wheel", function(event){
+			$targetScroll = $(this).prev(".ui-dialog").children(".ui-widget-content");
+			$targetScroll.scrollTop($targetScroll.scrollTop() + event.originalEvent.deltaY);
+		});
+
+		// 矢印キーでのスクロール
+		$(document).on("keydown", function(e){
+			if ( $("input").is(":focus") ){
+				return;
+			}
+			$targetScroll = $(".ui-widget-overlay").prev(".ui-dialog").children(".ui-widget-content");
+			switch(e.which){
+				case 38: // Key[↑]
+				$targetScroll.scrollTop($targetScroll.scrollTop() - 50);
+				break;
+	
+				case 40: // Key[↓]
+				$targetScroll.scrollTop($targetScroll.scrollTop() + 50);
+				break;
+			}
+		});
+	},
+
+	reload : function(){
+		location.reload();
+	},
+
+	logout : function(){
+		location = "/?logout=" + minhon.define.ON;
+	},
+
+	onChangeSiteInterface : function( obj ){
+		jQuery.ajax({
+			url      : "/app/settingController.php",
+			type     : "POST",
+			data     : {
+							"q_disp_lang" : $(obj).val()
+					   },
+			dataType : "json",
+			context  : obj,
+			error    : function(){
+	//					minhon.ui.notify(null, "Error");
+			},
+			success  : function(res){
+				if ( res.result === minhon.define.RES_OK ){
+					minhon.common.reload();
+				} else {
+					minhon.ui.notify(null, "Error");
+				}
+			}
+		});
+	},
+
+	infobar : function( text ){
+		$("<div>")
+			.css({
+				"position" : "absolute",
+				"top"      : $(window).height() - 100,
+				"z-index"  : "1000",
+				"width"    : "100%",
+				"opacity"  : "0"
+			})
+			.html(text)
+			.appendTo("body")
+			.animate({"opacity"  : "1", "top" : ($(window).height() / 2)}, 750, function(){
+				$(this)
+					.animate({"opacity"  : "1"}, 2500, function(){
+						$(this)
+							.animate({"opacity" : "0", "top" : ($(window).height() / 2) - 100}, 750, function(){
+								$(this).remove();
+							});
+					});
+			});
+	},
+
+	progressbar : function( type ){
+		return $("<div>")
+			.addClass("progress progress-striped active")
+			.append(
+				$("<div>")
+					.addClass("progress-bar " + type)
+					.css("width", "100%")
+			);
+	},
+
+	onClickRemove : function( action, arrData ){
+		minhon.common.onClickPost(action, arrData, WORD_J_JS_MINHON_COMMON_001);
+	},
+
+	onClickPost : function( action, arrData, message ){
+		$.alertable.confirm(message).then(function(){
+			var form = $("<form>")
+				.attr("action", action)
+				.attr("method", "post")
+				.append(
+					$("<input>")
+						.attr("type", "hidden")
+						.attr("name", "q_token")
+						.val($("#token_common").val())
+				)
+				.appendTo("body")
+
+			for (var key in arrData) {
+				var value = arrData[key];
+
+				$(form).append(
+					$("<input>")
+						.attr("type", "hidden")
+						.attr("name", key)
+						.val(value)
+				)
+			}
+
+			$(form).submit();
+		});
+	},
+
+	// スクロールの固定
+	bodyFix :function() {
+		$("body").css({
+			'overflow-y': 'hidden',
+		});
+	},
+
+	// スクロールの固定解除
+	bodyFixReset : function() {
+		$("body").css({
+		  'overflow-y': 'scroll',
+		});
+	},
+
+	eod : null
+};
+
+minhon.common.heartbeat = {
+	isUpdate: false,
+	loginStateOld :null,
+
+	checkLoginState: function () {
+		jQuery.ajax({
+			url: "/app/heartbeatController.php",
+			type: "GET",
+			data : {
+				'update' : minhon.common.heartbeat.isUpdate ? minhon.define.ON : minhon.define.OFF
+			},
+			datatype: "json",
+			error    : function(){
+				//minhon.ui.notify(null, minhon.define.STR_AJAX_ERROR);
+			},
+			success  : function( res ){
+				if (res.isLogin == minhon.define.OFF && minhon.common.loginStateOld == minhon.define.ON) {
+					$.alertable.alert(WORD_J_JS_MINHON_COMMON_002 + "<br>" + WORD_J_JS_MINHON_COMMON_003 + "<br>" + WORD_J_JS_MINHON_COMMON_004 + (res.hardLifeTime ? "<br>" + WORD_J_JS_MINHON_COMMON_005 : ""), {html:true}).always(function () {
+						document.location.reload();
+					});
+				}
+				minhon.common.loginStateOld = res.isLogin;
+			}
+		});
+
+		minhon.common.heartbeat.isUpdate = false;
+	},
+
+	update : function(){
+		minhon.common.heartbeat.isUpdate = true;
+	},
+
+	eod : null
+};
+
+minhon.common.style = {
+	initialize : function(){
+		$(window).on("resize", minhon.common.style.rowFull);
+
+		minhon.common.style.rowFull();
+
+		setTimeout(minhon.common.style.rowFull, 1000);
+	},
+
+	rowFull : function(){
+		$(".row-full").each(function(){
+			var h = 0;
+
+			$(this).children("div").each(function(){
+				$(this).css({
+					"height" : ""
+				});
+				h = Math.max(h, $(this).height());
+			});
+
+			$(this).children("div").css("height", h + "px");
+		});
+	},
+
+	eod : null
+};
+
+/*
+minhon.common.form = {
+	initialize : function(){
+		// select-lang
+		$(".select-lang .selected").on("click", minhon.common.form.onClickSelectedLang);
+		$(".select-lang .list a").on("click", minhon.common.form.onClickSelectLang);
+		$(".select-lang .reverse").on("click", minhon.common.form.onClickReverseLang);
+		minhon.common.form.changeSelectLang($(".select-lang .selected"));
+	},
+
+	setDir : function( dir, obj ){
+		obj = $(obj).hasClass("select-lang") ? $(obj).find("a.selected") : obj;
+
+		if ( dir == minhon.define.ON ){
+			$(obj).closest(".select-lang").find("a.selected i, a.selected .lang-t").show();
+			$(obj).closest(".select-lang").find("a.reverse").show();
+			$(obj).closest(".select-lang").find(".list .lang-t").show();
+		} else {
+			$(obj).closest(".select-lang").find("a.selected i, a.selected .lang-t").hide();
+			$(obj).closest(".select-lang").find("a.reverse").hide();
+			$(obj).closest(".select-lang").find(".list .lang-t").hide();
+		}
+
+		minhon.common.form.changeSelectLang(obj);
+	},
+
+	onClickSelectedLang : function(){
+		$(this).closest(".select-lang").find(".list").toggle();
+	},
+
+	onClickSelectLang : function(){
+		var lang  = $(this).attr("data-lang");
+
+		if ( $(this).closest("ul").hasClass("lang-s") ){
+			$(this).closest(".select-lang").find(".input-s input").val(lang);
+		} else {
+			$(this).closest(".select-lang").find(".input-t input").val(lang);
+		}
+
+		minhon.common.form.changeSelectLang(this);
+	},
+
+	onClickReverseLang : function(){
+		var langS = $(this).closest(".select-lang").find(".input-s input").val();
+		var langT = $(this).closest(".select-lang").find(".input-t input").val();
+
+		$(this).closest(".select-lang").find(".input-s input").val(langT);
+		$(this).closest(".select-lang").find(".input-t input").val(langS);
+
+		minhon.common.form.changeSelectLang(this);
+	},
+
+	changeSelectLang : function( obj ){
+		obj = $(obj).hasClass("select-lang") ? $(obj).find("a.selected") : obj;
+
+		["s", "t"].map(function(d){
+			var lang = $(obj).closest(".select-lang").find(".input-" + d + " input").val();
+			var text = $(obj).closest(".select-lang").find(".list .lang-" + d + " a[data-lang=" + lang + "]").text();
+
+			$(obj).closest(".select-lang").find(".list .lang-" + d + " a").removeClass("active");
+			$(obj).closest(".select-lang").find(".list .lang-" + d + " a[data-lang=" + lang + "]").addClass("active");
+			$(obj).closest(".select-lang").find(".selected .lang-" + d).text(text);
+		});
+
+		$(obj).closest(".select-lang").trigger("change");
+	},
+
+	eod : null
+};
+*/
+
+minhon.common.remove = {
+	initialize : function(){
+		if ( $(".btn-item-remove-submit").length == 0 ){
+			return;
+		}
+
+		$("<form>")
+			.attr("method", "post")
+			.attr("action", "./remove.html")
+			.attr("id", "form-remove")
+			.appendTo("body");
+
+		$(".btn-item-remove").on("click", function() {
+			$(this).toggleClass("btn-default btn-info");
+
+			minhon.common.remove.refresh();
+		});
+
+		$(".btn-item-remove-submit").on("click", function () {
+			if ( $(".btn-item-remove-submit").attr("disabled") == "disabled" ){
+				return false;
+			}
+
+			$ul = $("<ul></ul>");
+			$("tr").each(function () {
+				if ($(this).find(".btn-item-remove.btn-info").length == 1) {
+					$ul.append($("<li></li>").text($(this).find(".name").text()));
+				}
+			})
+			
+			$.alertable.confirm(WORD_J_JS_MINHON_COMMON_006 + "<br>" + $ul.prop("outerHTML"), {"html" : true}).then(function(){
+				$(".btn-item-remove.btn-info").each(function(){
+					var id = parseInt($(this).attr("data-id"));
+
+					$("#form-remove").append(
+						$("<input>")
+							.attr("type", "hidden")
+							.attr("name", "q_remove_id[]")
+							.val(id)
+					);
+				});
+
+				$("#form-remove").append(
+					$("<input>")
+						.attr("type", "hidden")
+						.attr("name", "q_token")
+						.val($("#token_common").val())
+				);
+			
+				var target = $(".btn-item-remove-submit").attr("data-target");
+
+				if (target) {
+					$("#form-remove").append(
+						$("<input>")
+							.attr("type", "hidden")
+							.attr("name", "q_target")
+							.val(target)
+					);
+				}
+				$("#form-remove").submit();
+			});
+		});
+
+		minhon.common.remove.refresh();
+	},
+
+	refresh : function(){
+		if ( $(".btn-item-remove.btn-info").length == 0 ){
+			$(".btn-item-remove-submit").removeClass("btn-info").addClass("btn-default").attr("disabled", true);
+		} else {
+			$(".btn-item-remove-submit").removeClass("btn-default").addClass("btn-info").attr("disabled", false);
+		}
+	},
+
+	eod : null
+};
+
+minhon.common.apiInfo = {
+	_onClickDialog : function( ajaxData ){
+		jQuery.ajax({
+			url      : "/app/apiInfoController.php",
+			type     : "POST",
+			data     : ajaxData,
+			dataType : "json",
+			context  : this,
+			error    : function(){
+				minhon.ui.notify(null, minhon.define.STR_AJAX_ERROR);
+			},
+			success  : function( res ){
+				if ( res.result == minhon.define.RES_OK ){
+					minhon.common.dialog(res.data, res.title);
+				} else {
+					minhon.ui.notify(null, res.message);
+				}
+			}
+		});
+	},
+
+	onClickMt : function( mtID ){
+		minhon.common.apiInfo._onClickDialog({
+			"q_mode"  : minhon.define.APP_API_INFO_CONTROLLER_MODE_MT,
+			"q_mt_id" : mtID
+		});
+	},
+
+	onClickMtAdapt : function( method ){
+		minhon.common.apiInfo._onClickDialog({
+			"q_mode"   : minhon.define.APP_API_INFO_CONTROLLER_MODE_MT_ADAPT,
+			"q_method" : method,
+		});
+	},
+
+	onClickSim : function(){
+		minhon.common.apiInfo._onClickDialog({
+			"q_mode"  : minhon.define.APP_API_INFO_CONTROLLER_MODE_SIM
+		});
+	},
+
+	onClickSimCalc : function(){
+		minhon.common.apiInfo._onClickDialog({
+			"q_mode"  : minhon.define.APP_API_INFO_CONTROLLER_MODE_SIM_CALC
+		});
+	},
+
+	onClickLookup : function(){
+		minhon.common.apiInfo._onClickDialog({
+			"q_mode" : minhon.define.APP_API_INFO_CONTROLLER_MODE_LOOKUP
+		});
+	},
+
+	onClickTermRoot : function( method ){
+		minhon.common.apiInfo._onClickDialog({
+			"q_mode"   : minhon.define.APP_API_INFO_CONTROLLER_MODE_TERM_ROOT,
+			"q_method" : method,
+		});
+	},
+
+	onClickTerm : function( method ){
+		minhon.common.apiInfo._onClickDialog({
+			"q_mode"   : minhon.define.APP_API_INFO_CONTROLLER_MODE_TERM,
+			"q_method" : method,
+		});
+	},
+
+	onClickBilingualRoot : function( method ){
+		minhon.common.apiInfo._onClickDialog({
+			"q_mode"   : minhon.define.APP_API_INFO_CONTROLLER_MODE_BILINGUAL_ROOT,
+			"q_method" : method,
+		});
+	},
+
+	onClickBilingual : function( method ){
+		minhon.common.apiInfo._onClickDialog({
+			"q_mode"   : minhon.define.APP_API_INFO_CONTROLLER_MODE_BILINGUAL,
+			"q_method" : method,
+		});
+	},
+
+	onClickSplit : function(){
+		minhon.common.apiInfo._onClickDialog({
+			"q_mode"  : minhon.define.APP_API_INFO_CONTROLLER_MODE_SPLIT
+		});
+	},
+
+	onClickConvert : function( method ){
+		minhon.common.apiInfo._onClickDialog({
+			"q_mode" : minhon.define.APP_API_INFO_CONTROLLER_MODE_CONVERT,
+			"q_method" : method
+		});
+	},
+
+	onClickLangDetect : function(){
+		minhon.common.apiInfo._onClickDialog({
+			"q_mode"  : minhon.define.APP_API_INFO_CONTROLLER_MODE_LANGDETECT
+		});
+	},
+
+	onClickTransFile : function( method ){
+		minhon.common.apiInfo._onClickDialog({
+			"q_mode" : minhon.define.APP_API_INFO_CONTROLLER_MODE_TRANS_FILE,
+			"q_method" : method
+		});
+	},
+
+	onClickExterm : function( method ){
+		minhon.common.apiInfo._onClickDialog({
+			"q_mode" : minhon.define.APP_API_INFO_CONTROLLER_MODE_EXTERM,
+			"q_method" : method
+		});
+	},
+
+	onClickAlignment : function( method ){
+		minhon.common.apiInfo._onClickDialog({
+			"q_mode"  : minhon.define.APP_API_INFO_CONTROLLER_MODE_ALIGNMENT,
+			"q_method"  : method
+		});
+	},
+
+	onClickDoc : function( method ){
+		minhon.common.apiInfo._onClickDialog({
+			"q_mode" : minhon.define.APP_API_INFO_CONTROLLER_MODE_DOC,
+			"q_method" : method
+		});
+	},
+
+	eod : null
+};
+
+minhon.common.term = {
+	dialog : null,
+	termRoodID : null,
+
+	form : function( kind, langS, langT, textS, textT, callback ){
+		if ( ! minhon.common.term.dialog ){
+			minhon.common.term.dialog = $("<div>");
+		}
+
+		jQuery.ajax({
+			"url"         : "/app/termController.php",
+			"type"        : "post",
+			"data"        : {
+				"q_mode"    : minhon.define.APP_TERM_CONTROLLER_MODE_FORM,
+				"q_kind"    : kind,
+				"q_lang_s"  : langS,
+				"q_lang_t"  : langT,
+				"q_text_s"  : textS,
+				"q_text_t"  : textT
+			},
+			"dataType"    : "json",
+			"error"       : function(){
+				minhon.ui.notify(null, minhon.define.STR_AJAX_ERROR);
+			},
+			"success"     : function( res ){
+				if ( res.result === minhon.define.RES_OK ){
+					var buttons = {}
+					buttons[WORD_J_JS_MINHON_COMMON_007] = function(){
+						minhon.common.term.submit(kind, callback);
+					};
+					buttons[WORD_J_JS_MINHON_COMMON_008] = function(){
+						$(this).dialog("close");
+					};
+
+					minhon.common.term.dialog
+						.empty()
+						.append(res.html["form"])
+						.dialog({
+							"title"   : WORD_J_JS_MINHON_COMMON_009,
+							"modal"   : true,
+							"buttons" : buttons,
+							"width"   : $(window).width() * 0.5,
+							"dialogClass" : "ui-dialog-term",
+							"open"    : function(){
+								$(".ui-dialog").find("button:first-child").addClass("btn btn-primary");
+								$(".ui-dialog").find("button:last-child").addClass("btn btn-default");
+
+								if ( minhon.common.term.termRootID != null ){
+									$(".ui-dialog").find("select[name=q_term_root_id]").val(minhon.common.term.termRootID);
+								}
+							}
+						})
+					;
+				} else {
+					minhon.ui.notify(null, res.message);
+				}
+			}
+		});
+	},
+
+	submit : function( kind, callback ){
+		var token      = $("#token_common").val();
+		var termID     = minhon.define.INIT_ID;
+		var termRootID = minhon.common.term.dialog.find("select[name=q_term_root_id]").val();
+		var textS      = minhon.common.term.dialog.find("textarea[name=q_text_s]").val();
+		var textT      = minhon.common.term.dialog.find("textarea[name=q_text_t]").val();
+
+		minhon.common.term.termRootID = termRootID;
+
+		textS = textS.replace(/\n/g, " ");
+		textT = textT.replace(/\n/g, " ");
+
+		jQuery.ajax({
+			"url"         : "/app/termController.php",
+			"type"        : "post",
+			"data"        : {
+				"q_token"        : token,
+				"q_mode"         : minhon.define.APP_TERM_CONTROLLER_MODE_SET,
+				"q_kind"         : kind,
+				"q_term_id"      : termID,
+				"q_term_root_id" : termRootID,
+				"q_text_s"       : textS,
+				"q_text_t"       : textT
+			},
+			"dataType"    : "json",
+			"error"       : function(){
+				minhon.ui.notify(null, minhon.define.STR_AJAX_ERROR);
+			},
+			"success"     : function( res ){
+				if ( res.result === minhon.define.RES_OK ){
+				} else {
+					//minhon.ui.notify(null, res.message);
+				}
+
+				if ( typeof callback == "function" ){
+					callback();
+				}
+
+				minhon.common.term.dialog.dialog("close");
+			}
+		});
+	},
+
+	eod : null
+};
+
+minhon.common.mt = {
+	onClickDetail : function( mtID ){
+		jQuery.ajax({
+			url  : "/app/mtInfoController.php",
+			type : "POST",
+			data : {
+				"q_mode"  : minhon.define.APP_MT_INFO_CONTROLLER_MODE_DETAIL,
+				"q_mt_id" : mtID
+			},
+			dataType : "json",
+			context  : this,
+			error    : function(){
+				minhon.ui.notify(null, minhon.define.STR_AJAX_ERROR);
+			},
+			success  : function( res ){
+				if ( res.result === minhon.define.RES_OK ){
+					minhon.common.dialog(res.data, WORD_J_JS_MINHON_COMMON_010);
+				} else {
+					minhon.ui.notify(null, res.message);
+				}
+			}
+		});
+	},
+
+	eod : null
+};
+
+minhon.common.mtform = {
+	dialog : null,
+	timer  : null,
+	text   : null,
+	data   : null,
+	textT  : null,
+	cache  : {},
+
+	open : function( langS, langT, mtID, title, description, text, callback, data ){
+		minhon.common.mtform.text = null;
+		minhon.common.mtform.data = data;
+
+		// ダイアログ表示済みの場合
+		if ( minhon.common.mtform.dialog != null ){
+			// 開くのみ
+			$("#mtform").modal("show");
+			// セット
+			minhon.common.mtform.set(title, description, text, callback);
+			return;
+		}
+
+		langS = langS || null;
+		langT = langT || null;
+		mtID  = mtID  || null;
+
+		// フォーム呼び出し
+		jQuery.ajax({
+			url      : "/app/mtController.php",
+			type     : "POST",
+			data     : {
+				"q_mode" : minhon.define.APP_MT_CONTROLLER_MODE_MTFORM,
+				"q_lang_s" : langS,
+				"q_lang_t" : langT
+			},
+			dataType : "json",
+			context  : this,
+			error    : function(){
+				//minhon.ui.notify(null, minhon.define.STR_AJAX_ERROR);
+			},
+			success  : function( res ){
+				if ( res.result === minhon.define.RES_OK ){
+					// フォームセット
+					minhon.common.mtform.dialog = $(res.data).appendTo("body");
+
+					// ダイアログ表示
+					$("#mtform").on("shown.bs.modal", function(){
+						var h = ($("#mtform .form-input").offset().top + $("#mtform .form-input").outerHeight()) - $("#mtform .select-list-mt").offset().top - 100;
+						$("#mtform .selectlist").css("max-height", h);
+					});
+					$("#mtform").modal();
+
+					// 言語選択ボックス 変更イベント
+					$("#mtform-lang").selectlang({
+						"onChanged" : minhon.common.mtform.refresh
+					});
+
+					$("#mtform .selectlist-mt input[value='" + mtID + "']").prop("checked", true);
+					// MT選択イベント
+					$("#mtform .selectlist-mt input").on("change", minhon.common.mtform.refreshMtButton);
+
+					// 翻訳不要指定文字挿入ボタン
+					$(".btn-mtform-untrans").on("click", minhon.common.mtform.untrans);
+					minhon.ui.tooltip($(".btn-mtform-untrans"));
+					// 翻訳ボタン クリックイベント
+					$(".btn-mtform-translate").on("click", minhon.common.mtform.translate);
+
+					// セット
+					minhon.common.mtform.set(title, description, text, callback);
+
+					// 原文変更監視 タイマー
+					//minhon.common.mtform.timer = setInterval(minhon.common.mtform.translate, 1000);
+				}
+			}
+		});
+	},
+
+	set : function( title, description, text, callback ){
+		$("#mtform .modal-title").text(title || "");
+		$("#mtform .description").text(description || "");
+
+		if ( typeof callback == "function" ){
+			// 決定ボタン非表示
+			$("#mtform .btn-mtform-submit").addClass("disabled");
+			
+			$("#mtform .form-menu").addClass("col-xs-4");
+			$("#mtform .form-input").addClass("col-xs-8");
+			$("#mtform .btn-mtform-back").hide();
+			// テキストセット
+			$("#mtform-text-s").val(text);
+			$("#mtform-text-t").val("");
+		} else {
+			callback = minhon.common.mtform.translateAll;
+
+			$("#mtform .form-menu").addClass("col-xs-12");
+			$("#mtform .form-input").hide();
+			$("#mtform .btn-mtform-back").show();
+		}
+
+		$("#mtform .btn-mtform-submit").off("click").on("click", {"callback" : callback}, minhon.common.mtform.onSubmit);
+		$("#mtform .btn-mtform-back").off("click").on("click", minhon.common.mtform.onBack);
+		$("#mtform .btn-mtform-close").off("click").on("click", minhon.common.mtform.onClose);
+
+		$("#mtform .modal-dialog").css("width", "80%");
+
+		$("#mtform-progress").hide();
+
+		minhon.common.mtform.refresh();
+	},
+
+	onSubmit : function( data ){
+		if ( typeof data.data.callback == "function" ){
+			var mtID  = $("#mtform .selectlist-mt input:checked").val();
+			var langS = $("#mtform-lang").selectlang("langS");
+			var langT = $("#mtform-lang").selectlang("langT");
+			var textS = $("#mtform-text-s").val().split("\n");
+			var textT = $("#mtform-text-t").val().split("\n");
+
+			var isModify = (minhon.common.mtform.textT != $("#mtform-text-t").val());
+
+			// rtl言語対応
+			if ( minhon.util.isLangRtl(langT) ){
+				$(".minhon-translate").addClass("rtl");
+			} else {
+				$(".minhon-translate").removeClass("rtl");
+			}
+
+			data.data.callback(mtID, langS, langT, textS, textT, minhon.common.mtform.data, isModify);
+		}
+
+		$("#mtform").modal("hide");
+	},
+
+	onBack : function(){
+		jQuery.each($(".minhon-translate"), function(){
+			var text = $(this).attr("title") || $(this).attr("data-title") || $(this).text();
+
+			$(this).text(text);
+		});
+
+		$("#mtform").modal("hide");
+	},
+
+	onClose : function(){
+		$("#mtform").modal("hide");
+	},
+
+	refresh : function( mtID ){
+		// 言語取得
+		var langS = $("#mtform-lang").selectlang("langS");
+		var langT = $("#mtform-lang").selectlang("langT");
+
+
+		// 自動翻訳IDが指定されている場合
+		if ( mtID ){
+			$("#mtform .selectlist-mt li[data-lang-s='" + langS + "'][data-lang-t='" + langT + "'] input[value='" + mtID + "']").first().prop("checked", true);
+		}
+
+		// 未選択状態の場合
+		if ( $("#mtform .selectlist-mt li[data-lang-s='" + langS + "'][data-lang-t='" + langT + "'] input:checked").length == 0 ){
+			// リストの初めの自動翻訳を選択する
+			$("#mtform .selectlist-mt li[data-lang-s='" + langS + "'][data-lang-t='" + langT + "'] input").first().prop("checked", true);
+		}
+
+		minhon.common.selectListMT.refresh("#mtform", langS, langT);
+
+		minhon.common.mtform.refreshMtButton();
+	},
+
+	refreshMtButton : function(){
+		var lang = $("#mtform-lang .lang").html();
+		var mt = minhon.common.selectListMT.get(true, "#mtform");
+
+		var mtName = "--";
+		if ( mt.id.length > 0 ){
+			mtName = mt.detail[mt.id[0]].name;
+		}
+
+		$(".label-mtform-mt .lang").html(lang);
+		$(".label-mtform-mt .mt").html(mtName);
+
+		minhon.common.mtform.text = null;
+	},
+
+	untrans : function(){
+		$("#mtform-text-s").focus();
+
+		var textarea = $("#mtform-text-s").get(0);
+
+		var start = textarea.selectionStart;
+		var end   = textarea.selectionEnd;
+
+		if ( start == end ){
+			return false;
+		}
+		
+		var val = textarea.value;
+		var range = val.slice(start, end);
+		var beforeNode = val.slice(0, start);
+		var afterNode = val.slice(end);
+		var insertNode = "｟" + range + "｠";
+		textarea.value = beforeNode + insertNode + afterNode;
+	},
+
+	translate : function(){
+		var textS = $("#mtform-text-s").val();
+
+		textS = $.trim(textS);
+
+		if ( textS.length == 0 ){
+			$("#mtform-text-t").val("");
+			return;
+		}
+
+		if ( minhon.common.mtform.text == textS ){
+			return;
+		}
+
+		minhon.common.mtform.text = textS;
+
+		var mt = minhon.common.selectListMT.get(true, "#mtform");
+		if ( mt.id.length == 0 ){
+			return;
+		}
+
+		var mtID  = mt.id[0];
+		var langS = $("#mtform-lang").selectlang("langS");
+		var langT = $("#mtform-lang").selectlang("langT");
+
+		minhon.common.mtform.cache[mtID] = minhon.common.mtform.cache[mtID] || {};
+
+		var arrTextS = textS.split("\n");
+		var arrTextT = [];
+
+		// 決定ボタン非表示
+		$("#mtform .btn-mtform-submit").addClass("disabled");
+		// プログレスバー表示
+		$("#mtform-progress").show();
+
+		var done = 0;
+		$("#mtform-text-t").val("");
+
+		jQuery.each(arrTextS, function(index, text){
+			text = jQuery.trim(text);
+
+			if ( text.length == 0 ){
+				return;
+			}
+
+			if ( minhon.common.mtform.cache[mtID][text] ){
+				arrTextT[index] = minhon.common.mtform.cache[mtID][text];
+				$("#mtform-text-t").val(arrTextT.join("\n"));
+				
+				if ( ++done == arrTextS.length ){
+					// 決定ボタン表示
+					$("#mtform .btn-mtform-submit").removeClass("disabled");
+					// プログレスバー非表示
+					$("#mtform-progress").hide();
+
+					minhon.common.mtform.textT = $("#mtform-text-t").val();
+				}
+			} else {
+				jQuery.ajax({
+					context  : this,
+					url      : "/app/processController.php",
+					type     : "POST",
+					async    : false,
+					data     : {
+						"q_mt_id"    : mtID,
+						"q_text"     : text,
+						"q_lang_s"   : langS,
+						"q_lang_t"   : langT
+					},
+					dataType : "json",
+					error    : function(){
+						//minhon.ui.notify("", minhon.define.STR_AJAX_ERROR);
+					},
+					success  : function( res ){
+						if ( res.result === minhon.define.RES_OK ){
+							var textT = res.data;
+							arrTextT[index] = textT;
+							$("#mtform-text-t").val(arrTextT.join("\n"));
+
+							minhon.common.mtform.cache[mtID][text] = textT;
+						} else {
+							minhon.ui.notify("", res.message);
+						}
+
+						if ( ++done == arrTextS.length ){
+							// 決定ボタン表示
+							$("#mtform .btn-mtform-submit").removeClass("disabled");
+							// プログレスバー非表示
+							$("#mtform-progress").hide();
+
+							minhon.common.mtform.textT = $("#mtform-text-t").val();
+						}
+					}
+				});
+			}
+		});
+	},
+
+	translateAll : function( mtID, langS, langT ){
+		jQuery.each($(".minhon-translate"), function(){
+			text = $(this).attr("title") || $(this).text();
+
+			if ( text.length == 0 ){
+				return;
+			}
+
+			$(this).attr("title", text);
+			$(this).addClass("minhon-translating");
+
+			jQuery.ajax({
+				context  : this,
+				url      : "/app/processController.php",
+				type     : "POST",
+				data     : {
+					"q_mt_id"    : mtID,
+					"q_text"     : text,
+					"q_lang_s"   : langS,
+					"q_lang_t"   : langT
+				},
+				dataType : "json",
+				context  : this,
+				error    : function(){
+					//minhon.ui.notify("", minhon.define.STR_AJAX_ERROR);
+				},
+				success  : function( res ){
+					if ( res.result === minhon.define.RES_OK ){
+						var textT = $("<div>").html(res.data).text();
+						$(this).html(textT);
+						$(this).removeClass("minhon-translating");
+
+						minhon.ui.tooltip($(this));
+					}
+				}
+			});
+		});
+	},
+
+	eod : null
+};
+
+minhon.common.mtInfo = {
+	process : function( info ){
+		var dmp = new diff_match_patch();
+
+		var $content = $("<div>", {
+			"class" : "content-mt-info"
+		});
+
+		// タイトル - 原文
+		$("<h5>").text(WORD_J_JS_MINHON_COMMON_011).appendTo($content);
+
+		// 原テキスト
+		$("<div>", {
+			"class" : "main",
+		}).append($("<div>", {
+			"class" : "text-s text-mt",
+		}).text(info["text-s"])).appendTo($content);
+
+		var $sentence = $("<div>", {
+			"class" : (info["sentence"].length > 1) ? "sentence" : ""
+		}).appendTo($content);
+
+		for ( var i=0; i<info["sentence"].length; i++ ){
+			var $split = $("<div>", {
+				"class" : (info["sentence"][i]["split"].length > 1) ? "split" : ""
+			}).appendTo($sentence);
+
+			for ( var j=0; j<info["sentence"][i]["split"].length; j++ ){
+				var infoSplit = info["sentence"][i]["split"][j];
+
+				if ( info["sentence"][i]["split"].length > 1 ){
+					// 原テキスト
+					$("<div>", {
+						"class" : "text-s",
+					}).text(infoSplit["text-s"]).appendTo($split);
+				}
+
+				// 正規表現置換
+				if ( infoSplit["process"]["regex"].length > 0 ){
+					// タイトル - 正規表現置換
+					$("<h5>").text(WORD_J_JS_MINHON_COMMON_012).appendTo($split);
+
+					for ( var k=0; k<infoSplit["process"]["regex"].length; k++ ){
+						var infoRegex = infoSplit["process"]["regex"][k];
+
+						var $regex = $("<div>", {
+							"class" : "item"
+						}).appendTo($split);
+
+						// テキスト
+						$("<div>", {
+							"class" : "text",
+						}).text(infoRegex["text"]).appendTo($regex);
+
+						// パターン
+						$("<div>", {
+							"class" : "pattern",
+						}).append($("<span>")
+							.text(infoRegex["pattern"])
+						).append($("<i>", {
+							"class" : "glyphicon glyphicon-arrow-right"
+						})
+						).append($("<span>")
+							.text(infoRegex["replace"])
+						).appendTo($regex);
+						
+						// 置換後テキスト
+						var d = dmp.diff_main(infoRegex["text"], infoRegex["result"]);
+						var ds = dmp.diff_prettyHtml(d);
+						$("<div>", {
+							"class" : "result",
+						}).html(ds).appendTo($regex);
+					}
+				}
+
+				// 翻訳前書換え
+				if ( infoSplit["process"]["replace-before"].length > 0 ){
+					// タイトル - 翻訳前書換え
+					$("<h5>").text(WORD_J_JS_MINHON_COMMON_013).appendTo($split);
+
+					for ( var k=0; k<infoSplit["process"]["replace-before"].length; k++ ){
+						var infoReplaceBefore = infoSplit["process"]["replace-before"][k];
+
+						var $replace = $("<div>", {
+							"class" : "item"
+						}).appendTo($split);
+
+						// テキスト
+						$("<div>", {
+							"class" : "text-s",
+						}).text(infoReplaceBefore["text-s"]).appendTo($replace);
+
+						// パターン
+						$("<div>", {
+							"class" : "pattern",
+						}).append($("<span>")
+							.text(infoReplaceBefore["term-s"])
+						).append($("<i>", {
+							"class" : "glyphicon glyphicon-arrow-right"
+						})
+						).append($("<span>")
+							.text(infoReplaceBefore["term-t"])
+						).appendTo($replace);
+
+						// 置換後テキスト
+						var d = dmp.diff_main(infoReplaceBefore["text-s"], infoReplaceBefore["text-t"]);
+						var ds = dmp.diff_prettyHtml(d);
+						$("<div>", {
+							"class" : "text-t",
+						}).html(ds).appendTo($replace);
+					}
+				}
+
+				// 完全一致翻訳
+				if ( infoSplit["process"]["preprocess"] && infoSplit["process"]["preprocess"]["exactmatch"] ){
+					// タイトル - 完全一致翻訳
+					$("<h5>").text(WORD_J_JS_MINHON_COMMON_014).appendTo($split);
+
+					var infoExactmatch = infoSplit["process"]["preprocess"]["exactmatch"][0];
+
+					var $exactmatch = $("<div>", {
+						"class" : "item"
+					}).appendTo($split);
+
+					// テキスト
+					$("<div>", {
+						"class" : "text-t",
+					}).text(infoExactmatch["target"]).appendTo($exactmatch);
+				}
+
+				// 履歴使用
+				if ( infoSplit["process"]["preprocess"] && infoSplit["process"]["preprocess"]["exactMatchByLog"] ){
+					// タイトル - 履歴使用
+					$("<h5>").text(WORD_J_JS_MINHON_COMMON_015).appendTo($split);
+
+					var infoExactMatchByLog = infoSplit["process"]["preprocess"];
+
+					var $exactMatchByLog = $("<div>", {
+						"class" : "item"
+					}).appendTo($split);
+
+					// テキスト
+					$("<div>", {
+						"class" : "text-t",
+					}).text(infoExactMatchByLog["text-t"]).appendTo($exactMatchByLog);
+				}
+
+				// 訳語指定翻訳
+				if ( infoSplit["process"]["translate"] && infoSplit["process"]["translate"]["specification"].length > 0 ){
+					// タイトル - 訳語指定翻訳
+					$("<h5>").text(WORD_J_JS_MINHON_COMMON_016).appendTo($split);
+
+					for ( var k=0; k<infoSplit["process"]["translate"]["specification"].length; k++ ){
+						var infoSpecification = infoSplit["process"]["translate"]["specification"][k];
+
+						var $replace = $("<div>", {
+							"class" : "item"
+						}).appendTo($split);
+
+						// パターン
+						$("<div>", {
+							"class" : "pattern",
+						}).append($("<span>")
+							.text(infoSpecification["source"])
+						).append($("<i>", {
+							"class" : "glyphicon glyphicon-arrow-right"
+						})
+						).append($("<span>")
+							.text(infoSpecification["target"])
+						).appendTo($replace);
+					}
+				}
+
+				// 逆翻訳スコア採用
+				if ( infoSplit["process"]["translate"] && infoSplit["process"]["translate"]["reverse"].length > 0 ){
+					// タイトル - 逆翻訳スコア採用
+					$("<h5>").text(WORD_J_JS_MINHON_COMMON_017).appendTo($split);
+
+					var $table = $("<table>", {
+						"class" : "table"
+					}).appendTo($split);
+
+					var $tbody = $("<tbody>").appendTo($table);
+
+					for ( var k=0; k<infoSplit["process"]["translate"]["reverse"].length; k++ ){
+						var infoReverse = infoSplit["process"]["translate"]["reverse"][k];
+
+						var $tr = $("<tr>").appendTo($tbody);
+
+						$("<td>", {
+							"rowspan" : 2
+						}).append(infoReverse["selected"] == minhon.define.ON ? $("<i>", {
+							"class" : "glyphicon glyphicon-ok"
+						}) : "").appendTo($tr);
+
+						$("<td>", {
+							"rowspan" : 2
+						}).text(infoReverse["score"]).appendTo($tr);
+
+						$("<td>").text(infoReverse["name-n"]).appendTo($tr);
+						$("<td>").text(infoReverse["name-r"]).appendTo($tr);
+
+						var $tr = $("<tr>").appendTo($tbody);
+
+						$("<td>").text(infoReverse["text-t"]).appendTo($tr);
+						$("<td>").text(infoReverse["text-r"]).appendTo($tr);
+					}
+				}
+
+				// 翻訳後書換え
+				if ( infoSplit["process"]["replace-after"].length > 0 ){
+					// タイトル - 翻訳後書換え
+					$("<h5>").text(WORD_J_JS_MINHON_COMMON_018).appendTo($split);
+
+					for ( var k=0; k<infoSplit["process"]["replace-after"].length; k++ ){
+						var infoReplaceAfter = infoSplit["process"]["replace-after"][k];
+
+						var $replace = $("<div>", {
+							"class" : "item"
+						}).appendTo($split);
+
+						// テキスト
+						$("<div>", {
+							"class" : "text-s",
+						}).text(infoReplaceAfter["text-s"]).appendTo($replace);
+
+						// パターン
+						$("<div>", {
+							"class" : "pattern",
+						}).append($("<span>")
+							.text(infoReplaceAfter["term-s"])
+						).append($("<i>", {
+							"class" : "glyphicon glyphicon-arrow-right"
+						})
+						).append($("<span>")
+							.text(infoReplaceAfter["term-t"])
+						).appendTo($replace);
+
+						// 置換後テキスト
+						var d = dmp.diff_main(infoReplaceAfter["text-s"], infoReplaceAfter["text-t"]);
+						var ds = dmp.diff_prettyHtml(d);
+						$("<div>", {
+							"class" : "text-t",
+						}).html(ds).appendTo($replace);
+					}
+				}
+
+				if ( info["sentence"][i]["split"].length > 1 ){
+					// 訳テキスト
+					$("<div>", {
+						"class" : "text-t",
+					}).text(infoSplit["text-t"]).appendTo($split);
+				}
+			}
+		}
+
+		// タイトル - 訳文
+		$("<h5>").text(WORD_J_JS_MINHON_COMMON_019).appendTo($content);
+
+		// 訳テキスト
+		$("<div>", {
+			"class" : "main",
+		}).append($("<div>", {
+			"class" : "text-t text-mt",
+		}).text(info["text-t"])).appendTo($content);
+
+		return $content;
+
+		$content.dialog({
+			title : WORD_J_JS_MINHON_COMMON_020,
+			width : "80%",
+			height  : $(window).height() * 0.9,
+			buttons : [{
+				"text" : "OK",
+				"click" : function(){
+					$(this).dialog("close")
+				}
+			}]
+		});
+
+		return false;
+	},
+
+	eod : null
+};
+
+minhon.common.selectListMT = {
+	initialize : function(){
+		$(document).on("change", ".select-list-mt input", minhon.common.selectListMT.badge);
+
+		minhon.common.selectListMT.badge();
+	},
+
+	refresh : function( target, langS, langT, isInit ){
+		if ( target == null ){
+			target = document;
+		}
+
+		if ( isInit ){
+			$(target).find(".selectlist li input").prop("checked", false);
+		}
+
+		$(target).find(".selectlist li").removeClass("show").hide();
+
+		if ( langT == null ){
+			$(target).find(".selectlist li[data-lang-s=" + langS + "]").addClass("show").show();
+		} else {
+			$(target).find(".selectlist li[data-lang-s=" + langS + "][data-lang-t=" + langT + "]").addClass("show").show();
+		}
+
+		$(target).find(".selectlist").each(function(){
+			var $tabPane = $(this).closest(".tab-pane");
+			var $tab = $(target).find("a[href='#" + $tabPane.attr("id") + "']").closest("li");
+
+			if ( $(this).find("li.show").length == 0 ){
+				$(this).hide();
+				$(this).siblings(".selectlist-none").show();
+				$tab.addClass("hide");
+			} else {
+				$(this).show();
+				$(this).siblings(".selectlist-none").hide();
+				$tab.removeClass("hide");
+			}
+
+		});
+		
+		$(".select-list-mt").each(function(){
+			$(this).find(".nav-tabs li:first a").tab("show");
+		});
+
+		minhon.common.selectListMT.badge();
+	},
+
+	badge : function(){
+		$(".select-list-mt").each(function(){
+			$(this).find(".nav a").each(function(){
+				var count = 0;
+
+				var target = $(this).attr("href");
+
+				$(target).find("li.show input").each(function(){
+					if ( $(this).prop("checked") ){
+						count++;
+					}
+				});
+
+				$(this).find(".badge").remove();
+
+				if ( count > 0 ){
+					$(this).append($("<span>").addClass("badge").text(count));
+				}
+			});
+		});
+	},
+
+	get : function( onlyShown, target ){
+		var res = {
+			"id" : [],
+			"detail" : {}
+		}
+
+		if ( target == null ){
+			target = document;
+		}
+
+		var show = onlyShown ? ".show" : "";
+
+		$(target).find(".select-list-mt li" + show + " input:checked").each(function(){
+			var id = $(this).val();
+
+			res["id"].push(id);
+
+			var tmp = $(this).closest("li");
+			res["detail"][id] = {
+				"id"    : id,
+				"langS" : tmp.attr("data-lang-s"),
+				"langT" : tmp.attr("data-lang-t"),
+				"name"  : tmp.attr("data-name")
+			};
+		});
+
+		return res;
+	},
+
+	eod : null
+};
+
+minhon.common.help = {
+	dialog : null,
+	dispHint : null,
+
+	open : function( page, hint ){
+		minhon.common.help.dispHint = hint || minhon.common.help.dispHint || minhon.define.OFF;
+
+		var alreadyOpen = true;
+
+		if ( ! minhon.common.help.dialog ){
+			minhon.common.help.dialog = $("<div>");
+			alreadyOpen = false;
+		}
+
+		jQuery.ajax({
+			url      : "/app/helpController.php",
+			type     : "POST",
+			data     : {
+				"q_page" : page,
+				"q_hint" : minhon.common.help.dispHint
+			},
+			dataType : "json",
+			context  : this,
+			error    : function(){
+				minhon.ui.notify(null, minhon.define.STR_AJAX_ERROR);
+			},
+			success  : function( res ){
+				if ( res.result === minhon.define.RES_OK ){
+					$(minhon.common.help.dialog).html(res.data);
+
+					if ( alreadyOpen ){
+						$(minhon.common.help.dialog)
+							.dialog({
+								"title"  : res.title,
+							})
+						;
+					} else {
+						$(minhon.common.help.dialog)
+							.dialog({
+								"title"  : res.title,
+								"width"  : $(window).width() * 0.75,
+								"height" : $(window).height() * 0.75
+							})
+						;
+					}
+				} else {
+				}
+			}
+		});
+	},
+
+	close : function(){
+		minhon.common.help.dispHint = null;
+		$(minhon.common.help.dialog).dialog("close");
+	},
+
+	expand : function(){
+		$(minhon.common.help.dialog).closest(".ui-dialog").css({
+			"left"   : 0,
+			"top"    : 0,
+			"width"  : "99%",
+			"height" : "100%"
+		});
+		$(minhon.common.help.dialog).css({
+			"width"  : "99%",
+			"height" : "100%"
+		});
+	},
+
+	notDisp : function(){
+		jQuery.ajax({
+			url      : "/app/settingController.php",
+			type     : "POST",
+			data     : {
+				"q_disp_hint" : $(minhon.common.help.dialog).find("input[type=checkbox]").prop("checked") ? minhon.define.OFF : minhon.define.ON
+			},
+			dataType : "json",
+			error    : function(){
+	//					minhon.ui.notify(null, "Error");
+			},
+			success  : function(res){
+				if ( res.result === minhon.define.RES_OK ){
+				} else {
+					minhon.ui.notify(null, "Error");
+				}
+			}
+		});
+	},
+
+	eod : null
+};
+
+minhon.common.oauth = {
+
+	onClickOAuth : function(){
+		var type = $('input:radio[name="q_oauth"]:checked').val();
+
+		if ( type == "oauth" ){
+			$("#oauth").css("display","block");
+			$("#oauth2").css("display","none");
+		} else {
+			$("#oauth").css("display","none");
+			$("#oauth2").css("display","block");
+		}
+	},
+
+	eod : null
+};

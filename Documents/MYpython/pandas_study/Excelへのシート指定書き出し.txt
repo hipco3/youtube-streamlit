@@ -1,0 +1,25 @@
+#import openpyxl　#OK　企業別のシート追加、値OK!!!
+from openpyxl.utils.dataframe import dataframe_to_rows
+#rows = dataframe_to_rows(p)
+wb = openpyxl.Workbook()#新規ファイル作成
+
+wb.save('alltest3.xlsx')
+for company in companies:
+    #print(company)
+    wb.create_sheet(title = company, index=1)#企業別シート追加OK
+    data=Nov_df[Nov_df['企業名'] == company]
+    df=pd.DataFrame(data)
+    #print(df)
+    
+    with pd.ExcelWriter('alltest3.xlsx', engine="openpyxl", mode="a") as writer: #こちらのファイルに書き出し、追加書き出し
+        
+        data.to_excel(writer, sheet_name=company, index=False)    #シート名を指定
+     
+    #data.to_excel('alltest3.xlsx',sheet_name=company)
+print(wb.sheetnames)
+
+
+#print(companies[0])
+    
+
+#wb.save('alltest3.xlsx')

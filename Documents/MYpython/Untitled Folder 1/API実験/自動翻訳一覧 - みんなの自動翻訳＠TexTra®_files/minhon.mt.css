@@ -1,0 +1,62 @@
+/* mt/index.html */
+.table-mt tbody tr td {
+	word-break: break-all;
+}
+.table-mt th.datetime {
+	min-width: 8em;
+}
+.table-mt td.lang-s,
+.table-mt td.lang-t {
+	min-width: 5em;
+}
+.table-mt td.lang-s {
+	padding-right: 0;
+}
+.table-mt td.lang-arrow {
+	padding-left: 0;
+	padding-right: 0;
+}
+.table-mt td.lang-t {
+	padding-left: 0;
+}
+
+.table-mt .progress-bar {
+	padding-left: 10px;
+	text-align: left;
+}
+.table-mt .autoupdate .label {
+	display: inline-block;
+	width: 100%;
+	font-size: 12px;
+}
+.table-mt .autoupdate .btn-group {
+	width: 100%;
+}
+.table-mt-adapt td.menu {
+	width: 120px;
+}
+.table-mt-custom td.menu {
+	width: 100px;
+}
+.glyphicon-info-sign{
+	font-size: 18px;
+}
+
+#modal-download-pre .title-sub {
+	margin-top: 20px;
+}
+
+#modal-download .modal-body > div {
+	margin-top: 40px;
+}
+#modal-download .modal-body > div:first-child {
+	margin-top: 0;
+}
+.popover-content{
+	word-wrap: break-word;
+}
+
+/* mt/edit/index.html */
+div.model {
+	display : none;
+}
